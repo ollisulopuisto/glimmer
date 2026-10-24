@@ -44,7 +44,7 @@ extension AppModel {
         // 2560×1600). The honest answer is: send what the user is
         // actually running. If a stricter host rejects, that's a host-
         // side config nudge, not a client-side workaround.
-        if let displayID = screen.cgDirectDisplayID {
+        if let displayID = screen.directDisplayID {
             // Ask Core Graphics for ALL display modes, including the
             // duplicate-low-resolution ones macOS hides by default. We
             // need the full list because the panel-native mode isn't
@@ -403,5 +403,12 @@ extension AppModel {
         case (1280, 720): return "720p"
         default: return "\(w) × \(h)"
         }
+    }
+}
+
+extension NSScreen {
+    /// Panel's CoreGraphics direct display identifier.
+    var directDisplayID: CGDirectDisplayID? {
+        (deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber)?.uint32Value
     }
 }

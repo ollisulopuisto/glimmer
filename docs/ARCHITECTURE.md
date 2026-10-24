@@ -335,7 +335,8 @@ Apple also documents
 
 When active, `VideoDecoder+HDR.configureLayerColorspace` sets:
 
-- `layer.preferredDynamicRange = .high` (on macOS 16+, or `wantsExtendedDynamicRangeContent = true` on macOS 15).
+- `layer.preferredDynamicRange = .high` (on macOS 16+, or
+  `wantsExtendedDynamicRangeContent = true` on macOS 15).
 - `layer.setValue(CGColorSpace(name: .itur_2100_PQ), forKey: "colorspace")`, via
   KVC because the Swift overlay elides the property on the
   `AVSampleBufferDisplayLayer` subclass.
@@ -355,9 +356,9 @@ cached HDR format description is rebuilt whenever metadata changes (the PC
 re-signals HDR with new values, e.g. a game changes EOTF or the PC's display is
 hot-swapped).
 
-When HDR drops back to SDR, `preferredDynamicRange` returns to `.standard` (or `wantsExtendedDynamicRangeContent` to `false`), the
-layer's `colorspace` is cleared, and the next-frame fallback attaches BT.709
-primaries.
+When HDR drops back to SDR, `preferredDynamicRange` returns to `.standard` (or
+`wantsExtendedDynamicRangeContent` to `false`), the layer's `colorspace` is
+cleared, and the next-frame fallback attaches BT.709 primaries.
 
 **Backpressure and recovery.** `AVSampleBufferVideoRenderer.status == .failed`
 latches after a bad sample (mid-stream SPS change, dirty AV1 OBU). The present

@@ -243,7 +243,7 @@ extension FramePacer {
     @MainActor
     static func screenSignature(for view: NSView) -> String {
         guard let screen = view.window?.screen else { return "none" }
-        let displayID = screen.cgDirectDisplayID.map { String($0) } ?? "none"
+        let displayID = screen.directDisplayID.map { String($0) } ?? "none"
         return "\(displayID)|\(screen.maximumFramesPerSecond)|\(screen.backingScaleFactor)"
     }
 

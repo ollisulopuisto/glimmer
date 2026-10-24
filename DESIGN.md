@@ -123,20 +123,20 @@ only thing Glimmer brings of its own is Eclipse Violet, and it appears only
 where you act.
 
 Surfaces are tactile, but taste comes first. The things you can press feel like
-objects: system materials that refracts what sits behind the window, a soft downward
-shadow, a slight give when pressed (scale 0.985). Everything else stays flat:
-facts, labels, explanations and status sit as plain text on the surface, with no
-chrome. Depth marks what can be pressed or what floats above the window, never
-decoration.
+objects: system materials that refracts what sits behind the window, a soft
+downward shadow, a slight give when pressed (scale 0.985). Everything else stays
+flat: facts, labels, explanations and status sit as plain text on the surface,
+with no chrome. Depth marks what can be pressed or what floats above the window,
+never decoration.
 
-The launcher is one sheet of regular material, sized to its content. The PC's name
-is its title and its switcher, the specs sit under the name, and each app is a
-violet button that streams it. There is no card inside the window: the window is
-the surface. Four looks have been tried and rejected: a neutral grey card (the
-"grey blob"), a narrow centred column in a wide card, a washed-out mauve card
-(the accent at low opacity over grey reads dusty), and a dark violet card lit
-from below, which read as flashy. The app icon is final and is not redrawn,
-recoloured or reinterpreted.
+The launcher is one sheet of regular material, sized to its content. The PC's
+name is its title and its switcher, the specs sit under the name, and each app
+is a violet button that streams it. There is no card inside the window: the
+window is the surface. Four looks have been tried and rejected: a neutral grey
+card (the "grey blob"), a narrow centred column in a wide card, a washed-out
+mauve card (the accent at low opacity over grey reads dusty), and a dark violet
+card lit from below, which read as flashy. The app icon is final and is not
+redrawn, recoloured or reinterpreted.
 
 **Key Characteristics:**
 
@@ -168,9 +168,9 @@ already uses.
   glowing.
 
 The primary surface is the accent itself, opaque: lightened with 10% white at
-the top left and deepened with 18% black at the bottom right, under system materials
-tinted with the accent at 0.15, with a 1pt white rim fading from 30% to 2% top
-to bottom.
+the top left and deepened with 18% black at the bottom right, under system
+materials tinted with the accent at 0.15, with a 1pt white rim fading from 30%
+to 2% top to bottom.
 
 ### Neutral
 
@@ -246,12 +246,12 @@ paragraph elsewhere in the pane.
 
 ## Layout
 
-The launcher is a content-sized window of system materials: its column ends
-in `.fixedSize(horizontal: false, vertical: true)`, and the window is 580pt
-wide, 532pt of content in 24pt side margins. The title bar holds the traffic
-lights on the leading edge and the Settings gear on the trailing edge. Under it,
-16pt apart: a failure banner when there is one; the header (the PC glyph, the
-PC's name with the spec line under it, a flexible gap and the readiness chip); a
+The launcher is a content-sized window of system materials: its column ends in
+`.fixedSize(horizontal: false, vertical: true)`, and the window is 580pt wide,
+532pt of content in 24pt side margins. The title bar holds the traffic lights on
+the leading edge and the Settings gear on the trailing edge. Under it, 16pt
+apart: a failure banner when there is one; the header (the PC glyph, the PC's
+name with the spec line under it, a flexible gap and the readiness chip); a
 two-column grid of app buttons with 10pt gutters; the state button, only when
 the PC needs something other than a stream; and the "Last played" footer. The
 grid shows at most four cells; beyond four apps, the fourth is a menu of the
@@ -277,14 +277,14 @@ the container.
 ## Elevation & Depth
 
 Glimmer is tactile but restrained, with depth reserved for surfaces that respond
-to touch or float over the window. system materials (`\.background\(\.regularMaterial\)`) is the primary
-depth cue. The launcher window itself is system materials, see-through
-enough to show colour behind it and blurred enough that text behind turns to
-colour. On it: the app buttons and the state button on the primary surface,
-regular material on the readiness chip, the gear and the overflow menu, and plain
-glass on the PC tiles in Settings. The refraction and colour behind the glass
-come from the desktop showing through, not from a gradient to remove. Shadows
-are black, soft and always cast downward.
+to touch or float over the window. system materials
+(`\.background\(\.regularMaterial\)`) is the primary depth cue. The launcher
+window itself is system materials, see-through enough to show colour behind it
+and blurred enough that text behind turns to colour. On it: the app buttons and
+the state button on the primary surface, regular material on the readiness chip,
+the gear and the overflow menu, and plain glass on the PC tiles in Settings. The
+refraction and colour behind the glass come from the desktop showing through,
+not from a gradient to remove. Shadows are black, soft and always cast downward.
 
 ### Shadow Vocabulary
 

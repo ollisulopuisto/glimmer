@@ -35,7 +35,8 @@
 Glimmer is a Mac-native client for
 [Sunshine](https://github.com/LizardByte/Sunshine). It streams games from your
 PC using Apple's video, audio and input frameworks, with a SwiftUI and AppKit
-interface. macOS 15.8 or later, Apple Silicon. Free, open source, and always free.
+interface. macOS 15.8 or later, Apple Silicon. Free, open source, and always
+free.
 
 ## What you get
 

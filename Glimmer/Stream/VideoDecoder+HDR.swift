@@ -53,11 +53,8 @@ extension VideoDecoder {
         let is10Bit = (streamVideoFormat & StreamProtocol.VIDEO_FORMAT_MASK_10BIT) != 0
         let active = is10Bit && hdrEnabled
 
-        // preferredDynamicRange is safe to set on every call (idempotent
-        // when the value doesn't change). We still guard the first-call
-        // log so we can spot stream-start vs. mid-stream HDR transitions
-        // in the trace.
-
+        // preferredDynamicRange is idempotent; guard first-call log
+        // to spot stream-start vs mid-stream HDR transitions.
 #if compiler(>=6.4)
         let preferred: CALayer.DynamicRange = active ? .high : .standard
         layer.preferredDynamicRange = preferred
@@ -69,25 +66,8 @@ extension VideoDecoder {
         let prefRangeStr = active ? "wantsEDR" : "standard"
 #endif
 
-        // Also set the layer's own compositing colorspace. moonlight-qt's
-        // vt_avsamplelayer.mm doesn't do this - they rely solely on the
-        // per-buffer kCVImageBufferCGColorSpaceKey attachment - but on
-        // macOS 26 the EDR-engagement heuristic also reads
-        // layer.colorspace. Without it, even with preferredDynamicRange =
-        // .high and PQ-tagged content arriving, macOS keeps
-        // NSScreen.maximumEDR at 1.0 (display stays in SDR) and tonemaps
-        // the PQ codes down → dark/crushed shadows. Setting it to the
-        // extended-linear ITU-R 2020 space tells the compositor "this
-        // layer composites in HDR." When HDR is off, we clear the property
-        // so the layer composites in default sRGB.
-        //
-        // KVC required: `CALayer.colorspace: CGColorSpace?` is a typed
-        // property on the parent class, but Apple's Swift import surface
-        // elides it for AVSampleBufferDisplayLayer (the subclass), so a
-        // direct `layer.colorspace = ...` fails to compile. The Objective-C
-        // runtime still has the setter (inherited and KVC-visible);
-        // moonlight-qt reaches it from Objective-C++. We don't have an
-        // Objective-C++ bridge for a single call site, so KVC stays until
+        // Compositing colorspace engages EDR and prevents shadow crushing.
+        // KVC accesses CALayer.colorspace elided on the display layer subclass.
         // the Swift import widens. Re-confirmed against the released
         // macOS 26 SDK.
         if active {
@@ -486,22 +466,13 @@ extension VideoDecoder {
     /// `probeAndLogPixelBufferAttachments` to keep each unit focused.
     @MainActor
     private func logFirstFrameProbe(_ facts: FirstFrameProbeFacts) {
-                let layer = self.displayLayer
+        let layer = self.displayLayer
 #if compiler(>=6.4)
-        let prefRange: String = layer?.preferredDynamicRange.rawValue ?? "n/a"
+        let prefRange = layer?.preferredDynamicRange.rawValue ?? "n/a"
 #else
-        let prefRange: String
-        if let l = layer {
-            prefRange = l.wantsExtendedDynamicRangeContent ? "wantsEDR" : "standard"
-        } else {
-            prefRange = "n/a"
-        }
+        let prefRange = layer.map { $0.wantsExtendedDynamicRangeContent ? "wantsEDR" : "standard" } ?? "n/a"
 #endif
-        // AVSampleBufferDisplayLayer doesn't surface `colorspace` in
-        // the Swift import surface (see comment on the setter above), so
-        // KVC stays. Guard with CFGetTypeID to avoid an `as!` trap when
-        // the value comes back as something unexpected (would only happen
-        // on an SDK regression but we don't want decode-thread crashes).
+        // Guard KVC colorspace read with CFGetTypeID to avoid downcast traps.
         let layerColorspaceName: String = {
             guard let csAny = layer?.value(forKey: "colorspace") as CFTypeRef?,
                   CFGetTypeID(csAny) == CGColorSpace.typeID else {
@@ -547,7 +518,7 @@ extension VideoDecoder {
         // anything else means the user is in a non-standard scale.
         var panelPxW: Int = 0
         var panelPxH: Int = 0
-        if let displayID = resolvedScreen?.cgDirectDisplayID,
+        if let displayID = resolvedScreen?.directDisplayID,
            let mode = CGDisplayCopyDisplayMode(displayID) {
             panelPxW = mode.pixelWidth
             panelPxH = mode.pixelHeight

@@ -45,12 +45,11 @@ struct StreamIntent: AppIntent {
     static let title: LocalizedStringResource = "Stream from PC"
     static let description = IntentDescription("Opens Glimmer and streams an app from a paired PC.")
 
-    @available(macOS, deprecated: 16.0)
-    static var openAppWhenRun: Bool = true
+    @available(macOS, deprecated: 26.0)
+    static var openAppWhenRun: Bool { true }
 #if compiler(>=6.4)
     static var supportedModes: IntentModes { .foreground }
 #endif
-
 
     @Parameter(title: "PC")
     var pc: PCEntity
@@ -176,21 +175,22 @@ struct GlimmerShortcuts: AppShortcutsProvider {
                          update: @escaping @MainActor () -> Void = { updateAppShortcutParameters() }) -> Task<Void, Never> {
         Task { @MainActor in
             await bootstrap(model).value
-            final class Tracker {
-                var known: Set<PCEntity>?
-            }
-            let state = Tracker()
-            func track() {
-                guard !Task.isCancelled else { return }
-                let current = withObservationTracking { Set(model.hosts.map(PCEntity.init)) } onChange: {
-                    Task { @MainActor in track() }
+            var known: Set<PCEntity>?
+            let (stream, continuation) = AsyncStream.makeStream(of: Void.self)
+            var iterator = stream.makeAsyncIterator()
+            while !Task.isCancelled {
+                let current = withObservationTracking {
+                    Set(model.hosts.map(PCEntity.init))
+                } onChange: {
+                    continuation.yield()
                 }
-                if current != state.known {
-                    state.known = current
+                if current != known {
+                    known = current
                     update()
                 }
+                guard !Task.isCancelled, await iterator.next() != nil else { break }
             }
-            track()
+            continuation.finish()
         }
     }
 }

@@ -7,8 +7,8 @@ Where the two differ, the stricter rule wins.
 ## What Glimmer is
 
 A Mac-native client for [Sunshine](https://github.com/LizardByte/Sunshine):
-Swift 6, Apple Silicon, macOS 15.8 and later. Socket, decoder, display, audio and
-input all run in one Swift process, with no external player and no C engine.
+Swift 6, Apple Silicon, macOS 15.8 and later. Socket, decoder, display, audio
+and input all run in one Swift process, with no external player and no C engine.
 
 The bar is one sentence: someone using Glimmer should mistake it for something
 Apple shipped. Everything below follows from it.

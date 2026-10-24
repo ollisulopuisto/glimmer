@@ -126,7 +126,6 @@ struct SystemServiceSeamTests {
         }
     }
 
-
     @Test(.timeLimit(.minutes(1)))
     func siriRelearnsPCNamesAfterLaunchAndOnRename() async {
         let model = AppModel()
