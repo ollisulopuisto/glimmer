@@ -98,7 +98,8 @@ final class DisplayTelemetry: @unchecked Sendable {
         let timer = DispatchSource.makeTimerSource(queue: .main)
         timer.schedule(deadline: .now() + 1.0, repeating: 1.0, leeway: .milliseconds(200))
         timer.setEventHandler { [weak self] in
-            MainActor.assumeIsolated { self?.sampleTick() }
+            guard let self else { return }
+            MainActor.assumeIsolated { self.sampleTick() }
         }
         samplerTimer = timer
         timer.resume()

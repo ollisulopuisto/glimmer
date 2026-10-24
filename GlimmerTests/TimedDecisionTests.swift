@@ -231,6 +231,21 @@ struct TimedPresentPathTests {
         #expect(decoder.secondsSinceDecodeGateLifted() == 1.5)
     }
 
+    @Test(.timeLimit(.minutes(1)))
+    func displayTimerSamplesOnTheMainActor() async {
+        let (samples, signal) = AsyncStream<Void>.makeStream()
+        let display = DisplayTelemetry(probe: {
+            signal.yield()
+            return DisplayProbe(edrHeadroom: 1.5, hdrEngaged: true, screenName: "Built-in",
+                                proMotionCapable: true, maxRefreshHz: 120)
+        })
+        display.start()
+        defer { display.stop() }
+        var waiter = samples.makeAsyncIterator()
+        #expect(await waiter.next() != nil)
+        #expect(display.snapshotAndReset().edrHeadroomAvg == 1.5)
+    }
+
     @Test func displaySamplesFoldIntoOneWindowThatResetsOnRead() {
         let headroom = OSAllocatedUnfairLock(initialState: [1.0, 3.0, 2.0])
         let display = DisplayTelemetry(probe: {
