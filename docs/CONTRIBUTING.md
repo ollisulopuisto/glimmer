@@ -486,12 +486,14 @@ Practically, before you call something done:
   publish releases.
 
 Hosted verification, CodeQL and releases use the same Xcode 26.6 toolchain on
-macOS 26. The additional macOS 15 compatibility job exercises the minimum
-supported OS family with Xcode 26.3. Neither replaces real streaming checks of
-audio devices, mouse capture and controllers. The macOS 27 Hot Corner option
-uses its documented public enum value so builds made with Xcode 26 preserve that
-behavior on newer systems. Release signing uses a separate protected workflow;
-see [RELEASE.md](RELEASE.md).
+macOS 26. The additional macOS 15 compatibility job exercises Sequoia with Xcode
+26.3. Hosted images can lag macOS 15.8, so that job lowers only its test build's
+minimum to 15.0, restores the metadata, then compiles the production 15.8
+targets and checks the embedded minimum versions. Neither replaces real
+streaming checks of audio devices, mouse capture and controllers. The macOS 27
+Hot Corner option uses its documented public enum value so builds made with
+Xcode 26 preserve that behavior on newer systems. Release signing uses a
+separate protected workflow; see [RELEASE.md](RELEASE.md).
 
 CodeQL scans Swift, Python and GitHub Actions with the `security-extended` query
 suite on pull requests, including approved fork PRs, and on every `main` commit.

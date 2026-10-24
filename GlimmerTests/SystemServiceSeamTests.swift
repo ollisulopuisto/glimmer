@@ -191,11 +191,11 @@ struct SystemServiceSeamTests {
     @Test func dockTrackingDoesNotRetainTheDelegate() async {
         let model = AppModel()
         var delegate: AppDelegate? = AppDelegate()
-        weak var observedDelegate = delegate
+        let delegateIsAlive = { [weak delegate] in delegate != nil }
         var refreshes = 0
         delegate?.trackStreaming(mgr: model) { _ in refreshes += 1 }
         delegate = nil
-        #expect(observedDelegate == nil)
+        #expect(!delegateIsAlive())
         model.isStreaming = true
         await DispatchQueue.main.drainForTest()
         #expect(refreshes == 0)

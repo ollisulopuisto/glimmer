@@ -238,8 +238,21 @@ jobs:
           XCCONFIG
           printf 'XCODE_XCCONFIG_FILE=%s\n' "$XCODE_XCCONFIG_FILE" >> "$GITHUB_ENV"
 
-      - name: Test on macOS 15 and build the network helper
-        run: make test helper-build
+      - name: Test the Sequoia API paths
+        run: |
+          # Hosted Sequoia images can lag the production 15.8 minimum.
+          # Lower only this test build's floor, then restore the production metadata.
+          trap 'git restore -- Glimmer/Info.plist LoginHelper/Info.plist helper/Info.plist' EXIT
+          for plist in Glimmer/Info.plist LoginHelper/Info.plist helper/Info.plist; do
+            /usr/libexec/PlistBuddy -c 'Set LSMinimumSystemVersion 15.0' "$plist"
+          done
+          TEST_CONFIG="$RUNNER_TEMP/glimmer-compatibility-tests.xcconfig"
+          cp "$XCODE_XCCONFIG_FILE" "$TEST_CONFIG"
+          printf '\nMACOSX_DEPLOYMENT_TARGET = 15.0\n' >> "$TEST_CONFIG"
+          XCODE_XCCONFIG_FILE="$TEST_CONFIG" make test
+
+      - name: Build the production macOS 15.8 targets
+        run: make app helper-build
 
       - name: Check embedded minimum versions
         run: |
