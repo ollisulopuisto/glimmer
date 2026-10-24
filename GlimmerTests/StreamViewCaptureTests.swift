@@ -159,8 +159,15 @@ struct StreamViewCaptureTests {
         let forwarder = InputForwarder()
         #expect(forwarder.diagnosticEventTypeName(.scrollWheel) == "scrollWheel")
         #expect(forwarder.diagnosticEventTypeName(.otherMouseDown) == "otherMouseDown")
-        #expect(forwarder.diagnosticEventTypeName(.mouseCancelled)
-            == "type(\(NSEvent.EventType.mouseCancelled.rawValue))")
+#if compiler(>=6.4)
+        if #available(macOS 26.0, *) {
+            #expect(forwarder.diagnosticEventTypeName(.mouseCancelled)
+                == "type(\(NSEvent.EventType.mouseCancelled.rawValue))")
+        }
+#endif
+        if let unmapped = NSEvent.EventType(rawValue: 999) {
+            #expect(forwarder.diagnosticEventTypeName(unmapped) == "type(999)")
+        }
     }
 
     /// Past 100 events in a second the log samples one in N.
