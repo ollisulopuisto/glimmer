@@ -3,9 +3,15 @@
 **What actually ships is not this.** The app icon is `Glimmer/AppIcon.icon`, a
 hand-authored Icon Composer bundle: one `eclipse-mark.png` layer over a
 violet-to-black vertical gradient declared in `icon.json`, with a slightly
-brighter dark specialization. There is no `AppIcon.appiconset` in
-`Assets.xcassets` any more. `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon` plus
-`CFBundleIconName` in `Info.plist` is what resolves it.
+brighter dark specialization. `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon`
+plus `CFBundleIconName` in `Info.plist` is what resolves it.
+
+Xcode 26.3's Icon Composer compiler crashes on the hosted Sequoia image. Its
+macOS 26.2 SDK build selects `LegacyAppIcon` and excludes `AppIcon.icon` from
+resource compilation. That catalog contains the existing
+`docs/assets/icon-512.png` export without redrawing it. Newer release toolchains
+still use the layered Icon Composer asset. The plist follows the selected
+catalog name in both cases.
 
 `generate-icons.swift` is the generator for the previous moon-and-sparkles
 design. It still runs, and the rationale below is worth keeping because the

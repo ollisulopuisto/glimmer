@@ -8,12 +8,10 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<!-- Asset-catalog-managed AppIcon. Without CFBundleIconName the Dock
-	     falls back to the static AppIcon.icns (no light/dark variants);
-	     with it macOS reads the appearance-aware AppIcon from Assets.car
-	     and theme-snaps the icon like first-party Tahoe apps. -->
+	<!-- Follow the selected catalog icon so Xcode 26.3 can use the existing
+	     raster export without invoking its crashing Icon Composer compiler. -->
 	<key>CFBundleIconName</key>
-	<string>AppIcon</string>
+	<string>$(ASSETCATALOG_COMPILER_APPICON_NAME)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

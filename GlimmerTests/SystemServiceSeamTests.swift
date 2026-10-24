@@ -179,13 +179,15 @@ struct SystemServiceSeamTests {
     func dockTrackingReadsCommittedStateAcrossRepeatedStreamTransitions() async {
         let model = AppModel()
         let delegate = AppDelegate()
+        delegate.model = model
         let (updates, signal) = AsyncStream<Bool>.makeStream()
-        delegate.trackStreaming(mgr: model) { _ in signal.yield(model.isStreaming) }
+        delegate.trackStreaming(mgr: model) { owner in signal.yield(owner.model?.isStreaming == true) }
         var waiter = updates.makeAsyncIterator()
         for streaming in [true, false, true, false] {
             model.isStreaming = streaming
             #expect(await waiter.next() == streaming)
         }
+        #expect(delegate.model === model)
     }
 
     @Test func dockTrackingDoesNotRetainTheDelegate() async {
