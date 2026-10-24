@@ -129,7 +129,7 @@ final class StreamAwareUpdateAlerts: NSObject, @preconcurrency SPUStandardUserDr
         }
         // onChange fires before the new value lands; re-read it on the next turn.
         withObservationTracking { _ = isStreaming() } onChange: { [weak self] in
-            Task { @MainActor in self?.runPendingActionsWhenStreamEnds() }
+            Task { @MainActor [weak self] in self?.runPendingActionsWhenStreamEnds() }
         }
     }
 

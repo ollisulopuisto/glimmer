@@ -62,7 +62,9 @@ actor HelperClient {
         conn.remoteObjectInterface = NSXPCInterface(with: GlimmerHelperProtocol.self)
         generation += 1
         let token = generation
-        conn.invalidationHandler = { [weak self] in Task { await self?.drop(token) } }
+        conn.invalidationHandler = { [weak self] in
+            Task { [weak self] in await self?.drop(token) }
+        }
         conn.resume()
         connection = conn
         return (conn, token)

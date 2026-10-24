@@ -292,13 +292,13 @@ extension StreamSession {
         setup.2.setBackend(backendForInput)
         // Set the quit handler now that the session reference is stable.
         setup.1.onQuitHotkey = { [weak self] in
-            Task { await self?.stop() }
+            Task { [weak self] in await self?.stop() }
         }
         // Window mode: the red button / Cmd-W ends the stream exactly like the
         // quit hotkey (same stop(), same /cancel). The delegate refuses the
         // close itself so the session's own fade-out teardown owns the exit.
         setup.0.onCloseRequested = { [weak self] in
-            Task { await self?.stop() }
+            Task { [weak self] in await self?.stop() }
         }
         // The chord toggles the window directly; both live on the main actor.
         setup.1.onMiniPlayerHotkey = { [weak win = setup.0] in
