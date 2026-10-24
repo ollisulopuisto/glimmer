@@ -344,7 +344,7 @@ extension InputForwarder {
     /// Stable human-readable names for every NSEvent type we might log.
     /// Backed by a flat lookup table (not real branching) so the diagnostic
     /// formatter stays a simple data map rather than a giant switch.
-    /// `.mouseCancelled` (macOS 26+) and any future-added cases are absent
+    /// `.mouseCancelled` (macOS 15.8+) and any future-added cases are absent
     /// here and fall through to the raw-value fallback in
     /// `diagnosticEventTypeName(_:)` - keeping us exhaustive on the current
     /// SDK without churning the table every time AppKit gains an event type.
@@ -387,7 +387,7 @@ extension InputForwarder {
 
     /// Human-readable name for an NSEvent type, for diagnostic log lines.
     /// Known types resolve through the flat lookup table above; anything not
-    /// in it (e.g. `.mouseCancelled` on macOS 26+, future AppKit additions)
+    /// in it (e.g. `.mouseCancelled` on macOS 15.8+, future AppKit additions)
     /// falls back to its raw value, which is enough to identify the type.
     func diagnosticEventTypeName(_ type: NSEvent.EventType) -> String {
         Self.diagnosticEventTypeNames[type] ?? "type(\(type.rawValue))"

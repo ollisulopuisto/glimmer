@@ -9,8 +9,8 @@ icon: code
 
 Required:
 
-- macOS 26 or newer
-- Xcode 26.6 or later (Swift 6, `swiftc`, `xcodebuild`, `xcrun`)
+- macOS 15.8 or newer
+- Xcode 26.3 or later (Swift 6, `swiftc`, `xcodebuild`, `xcrun`)
 - Homebrew
 - Python 3.10 or newer, for release tooling and its regression tests
 - TruffleHog 3.97.8 or newer, for the required secret-scan flags
@@ -475,7 +475,7 @@ Practically, before you call something done:
   commit in a clean worktree and run `make verify`. Record that commit SHA and
   the checks in the review. Hosted Verify runs the same gate as three parallel
   jobs (`make check` with every pre-commit hook, `make test`, `make test-asan`)
-  on Apple Silicon macOS 26 runners with Xcode 26.6 and compiler warnings
+  on Apple Silicon macOS 15.8 runners with Xcode 26.3 and compiler warnings
   treated as errors; the required `macOS` check passes only when all three do.
   The checks and tests jobs measure coverage and upload the reports. A separate
   `libFuzzer` job runs `scripts/fuzz.sh` for 30 seconds per target; it is not
@@ -483,11 +483,11 @@ Practically, before you call something done:
   run, and a newer push to a pull request replaces its older run. PR jobs
   receive no signing credentials and cannot publish releases.
 
-Hosted verification, CodeQL and releases use the same Xcode 26.6 toolchain on
-macOS 26. These checks exercise the minimum supported OS family, but do not
+Hosted verification, CodeQL and releases use the same Xcode 26.3 toolchain on
+macOS 15.8. These checks exercise the minimum supported OS family, but do not
 replace real streaming checks of audio devices, mouse capture and controllers.
 The macOS 27 Hot Corner option uses its documented public enum value so builds
-made with Xcode 26 preserve that behavior on newer systems. Release signing uses
+made with Xcode 26.3 preserve that behavior on newer systems. Release signing uses
 a separate protected workflow; see [RELEASE.md](RELEASE.md).
 
 CodeQL scans Swift, Python and GitHub Actions with the `security-extended` query
@@ -496,7 +496,7 @@ A pull request that changes nothing the traced Swift build reads (see
 `scripts/codeql-swift-changed.py`) skips only the Swift build and analysis; its
 merge to `main` is scanned in full, and a release candidate needs a Swift
 analysis of its exact commit. The Swift scan compiles the unsigned app, login
-item and privileged helper with Xcode 26.6; it receives no release credentials.
+item and privileged helper with Xcode 26.3; it receives no release credentials.
 Compiler-only tracing leaves SwiftPM's package sandbox intact. A post-analysis
 query requires successful extraction of every tracked production Swift file, so
 partial extraction cannot pass. An unsupported compiler or failed coverage query

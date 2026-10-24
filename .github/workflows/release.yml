@@ -54,7 +54,7 @@ jobs:
     if: >-
       github.repository == 'Se7enbrc/glimmer' && inputs.operation == 'candidate'
       && github.ref == 'refs/heads/release-candidate'
-    runs-on: macos-26
+    runs-on: macos-15
     timeout-minutes: 30
     permissions:
       contents: read
@@ -66,7 +66,7 @@ jobs:
       EXPECTED_SHA: ${{ inputs.expected_sha }}
       RELEASE_OPERATION: ${{ inputs.operation }}
       RC_TAG: ${{ inputs.rc_tag }}
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       HOMEBREW_NO_AUTO_UPDATE: "1"
     defaults:
       run:
@@ -111,7 +111,7 @@ jobs:
     if: >-
       github.repository == 'Se7enbrc/glimmer' && inputs.operation == 'candidate'
       && github.ref == 'refs/heads/release-candidate'
-    runs-on: macos-26
+    runs-on: macos-15
     timeout-minutes: 30
     permissions:
       contents: read
@@ -123,7 +123,7 @@ jobs:
       EXPECTED_SHA: ${{ inputs.expected_sha }}
       RELEASE_OPERATION: ${{ inputs.operation }}
       RC_TAG: ${{ inputs.rc_tag }}
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       HOMEBREW_NO_AUTO_UPDATE: "1"
     defaults:
       run:
@@ -162,7 +162,7 @@ jobs:
     if: >-
       github.repository == 'Se7enbrc/glimmer' && inputs.operation == 'candidate'
       && github.ref == 'refs/heads/release-candidate'
-    runs-on: macos-26
+    runs-on: macos-15
     timeout-minutes: 30
     permissions:
       contents: read
@@ -174,7 +174,7 @@ jobs:
       EXPECTED_SHA: ${{ inputs.expected_sha }}
       RELEASE_OPERATION: ${{ inputs.operation }}
       RC_TAG: ${{ inputs.rc_tag }}
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       HOMEBREW_NO_AUTO_UPDATE: "1"
     defaults:
       run:
@@ -214,7 +214,7 @@ jobs:
       !cancelled() && inputs.operation == 'candidate' &&
       needs.verify-checks.result == 'success' && needs.verify-tests.result ==
       'success' && needs.verify-asan.result == 'success'
-    runs-on: macos-26
+    runs-on: macos-15
     timeout-minutes: 30
     permissions:
       contents: read
@@ -228,7 +228,7 @@ jobs:
       EXPECTED_SHA: ${{ inputs.expected_sha }}
       RELEASE_OPERATION: candidate
       RC_TAG: ${{ inputs.rc_tag }}
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -279,7 +279,7 @@ jobs:
   sign:
     needs: [build, tooling]
     environment: release
-    runs-on: macos-26
+    runs-on: macos-15
     timeout-minutes: 45
     permissions:
       contents: read
@@ -296,7 +296,7 @@ jobs:
       RELEASE_OPERATION: candidate
       RC_TAG: ${{ inputs.rc_tag }}
       TRUSTED_TOOLING_SHA: ${{ needs.tooling.outputs.sha }}
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       ACTIONS_STEP_DEBUG:
         ${{ secrets.ACTIONS_STEP_DEBUG || vars.ACTIONS_STEP_DEBUG }}
       ACTIONS_RUNNER_DEBUG:
@@ -385,13 +385,13 @@ jobs:
 
   validate:
     needs: [tooling, sign]
-    runs-on: macos-26
+    runs-on: macos-15
     timeout-minutes: 15
     permissions:
       contents: read
       actions: read
     env:
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       EXPECTED_SHA: ${{ inputs.expected_sha }}
       RC_TAG: ${{ inputs.rc_tag }}
       SIGNED_MANIFEST: ${{ needs.sign.outputs.manifest }}

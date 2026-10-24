@@ -377,7 +377,7 @@ The app also opts into Enhanced Security: hardened heap, platform restrictions
 and read-only loader state, with the corresponding compiler protections.
 Security version 1 is pinned while version 2's automatic guard-object costs
 remain unmeasured on streaming workloads. Legacy integer and current string
-version keys preserve support for macOS 26.0 and 26.4 or later. These
+version keys preserve support for macOS 15.8.0 and 15.8.4 or later. These
 protections need functional and performance validation; they do not replace
 input validation or imply that all memory-safety bugs are prevented.
 

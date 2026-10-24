@@ -25,8 +25,8 @@ signing = importlib.import_module('ios-testflight-sign')
 
 def toolchain():
     result = subprocess.run(['xcodebuild', '-version'], capture_output=True, text=True, check=True, timeout=30)
-    if result.stdout.splitlines()[0] != 'Xcode 26.6':
-        raise ValueError('TestFlight CI must use the verified Xcode 26.6 toolchain')
+    if result.stdout.splitlines()[0] != 'Xcode 26.3':
+        raise ValueError('TestFlight CI must use the verified Xcode 26.3 toolchain')
     return result.stdout.strip()
 
 

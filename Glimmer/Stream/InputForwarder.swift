@@ -13,7 +13,7 @@
 //
 //   * Input goes through a custom NSView (`StreamInputView`) installed as the
 //     window's contentView's responder. Earlier revisions used
-//     `NSEvent.addLocalMonitorForEvents`, but on macOS 26 the responder chain
+//     `NSEvent.addLocalMonitorForEvents`, but on macOS 15.8 the responder chain
 //     consumes mouseMoved/keyDown events for content views that accept first
 //     responder *before* the local monitor block fires. Routing through
 //     NSResponder overrides is the only thing that's reliably ordered.

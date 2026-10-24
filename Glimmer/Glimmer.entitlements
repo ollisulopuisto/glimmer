@@ -18,7 +18,7 @@
 	<true/>
 
 	<!-- Pin version 1 until the streaming workload has been profiled with guard objects.
-	     Integer keys cover macOS 26.0; string keys cover macOS 26.4 and later. -->
+	     Integer keys cover macOS 15.8.0; string keys cover macOS 15.8 and later. -->
 	<key>com.apple.security.hardened-process</key>
 	<true/>
 	<key>com.apple.security.hardened-process.enhanced-security-version</key>

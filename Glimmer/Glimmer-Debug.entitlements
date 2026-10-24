@@ -19,7 +19,7 @@
 	<true/>
 
 	<!-- Match Release hardening so local diagnostics exercise the same restrictions.
-	     Both key representations preserve support for macOS 26.0 and 26.4+. -->
+	     Both key representations preserve support for macOS 15.8.0 and 15.8.4+. -->
 	<key>com.apple.security.hardened-process</key>
 	<true/>
 	<key>com.apple.security.hardened-process.enhanced-security-version</key>

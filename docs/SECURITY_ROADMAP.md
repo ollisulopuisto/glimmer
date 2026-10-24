@@ -123,7 +123,7 @@ own evidence and any applicable qualification.
    signatures, profiles, the notarization ticket, dSYMs and the DMG and ZIP
    containers stay outside it, and `--normalize` binds a shipped bundle to the
    payload. Still to do: run the **Reproducible build** workflow on the hosted
-   Xcode 26.6 runner for a release commit, and normalize a published Developer
+   Xcode 26.3 runner for a release commit, and normalize a published Developer
    ID-signed candidate against a local rebuild on that same Xcode. An unsigned
    comparison must not be presented as proof that the whole distributed package
    is reproducible. Criteria: `build_repeatable`, `build_reproducible`.

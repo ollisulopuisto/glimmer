@@ -26,7 +26,7 @@ body:
     id: environment
     attributes:
       label: Mac + macOS version
-      placeholder: 'MacBook Pro 14", macOS 26.x'
+      placeholder: 'MacBook Pro 14", macOS 15.8.x'
     validations:
       required: true
   - type: input

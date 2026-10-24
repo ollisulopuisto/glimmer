@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 ugfugl.io
 
-// Generates the Glimmer app icon set in Apple's macOS 26 "Liquid Glass" style.
+// Generates the Glimmer app icon set in Apple's macOS 15.8 "Liquid Glass" style.
 // Full design notes, usage, and palette/Icon-Composer rationale live in the
 // companion `scripts/generate-icons.md`; this header stays terse so the script
 // keeps under the file-length guardrail.
@@ -10,7 +10,7 @@
 // Usage (run via `swift scripts/generate-icons.swift [flag]`):
 //   (none)      light variant - legacy .appiconset output
 //   --dark      dark variant - brighter palette for a dark Dock
-//   --layered   the 1024px layered PNGs for macOS 26's Icon Composer bundle
+//   --layered   the 1024px layered PNGs for macOS 15.8's Icon Composer bundle
 
 import AppKit
 import CoreGraphics
@@ -20,7 +20,7 @@ import Foundation
 
 let outputDir = URL(fileURLWithPath: "Glimmer/Assets.xcassets/AppIcon.appiconset")
 // The .icon bundle lives NEXT TO Assets.xcassets, not inside it (see the doc):
-// Xcode 26 only honors the Icon Composer bundle as a top-level target resource.
+// Xcode 26.3 only honors the Icon Composer bundle as a top-level target resource.
 let layeredOutputDir = URL(fileURLWithPath: "Glimmer/AppIcon.icon/Assets")
 
 // The standard macOS .appiconset slots: each point-size gets an @1x (NxN) and
@@ -125,7 +125,7 @@ let palette: Palette = isDark ? .dark : .light
 
 // MARK: - Geometry
 
-/// Squircle path approximating Apple's macOS 26 mask. A rounded rect at ~22.4%
+/// Squircle path approximating Apple's macOS 15.8 mask. A rounded rect at ~22.4%
 /// of the canvas matches the visual feel of Tahoe app tiles.
 func squirclePath(in rect: CGRect) -> CGPath {
     let radius = rect.width * 0.224
@@ -513,7 +513,7 @@ func renderIcon(size: Int) -> Data? {
     }
 }
 
-// MARK: - Layered rendering (macOS 26 .icon bundle)
+// MARK: - Layered rendering (macOS 15.8 .icon bundle)
 //
 // Two 1024×1024 raster layers (NO squircle clip - Tahoe masks them) on top of
 // icon.json's flat `fill`: glows + rim → background overlay, moon + sparkles →

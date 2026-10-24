@@ -8,7 +8,7 @@ layout:
 
 # Install Glimmer
 
-macOS 26+, Apple Silicon.
+macOS 15.8+, Apple Silicon.
 
 ```bash
 brew tap se7enbrc/glimmer

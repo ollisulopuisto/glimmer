@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 ugfugl.io
 
 // Renders the Glimmer icon split into separate Background + Foreground
-// PNG layers for the macOS 26 Tahoe `.icon` bundle format. The legacy
+// PNG layers for the macOS 15.8 Tahoe `.icon` bundle format. The legacy
 // .appiconset's per-appearance variants are inert on Tahoe; the .icon
 // bundle (produced by Apple's Icon Composer GUI but also hand-writable)
 // lets macOS auto-theme light / dark / tinted / clear from a layered
