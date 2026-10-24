@@ -64,7 +64,7 @@ jobs:
   verify:
     name: Verify (${{ matrix.part }})
     needs: changes
-    runs-on: macos-15
+    runs-on: macos-15-arm64
     timeout-minutes: 30
     strategy:
       fail-fast: false

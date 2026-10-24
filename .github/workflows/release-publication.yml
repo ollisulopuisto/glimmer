@@ -44,7 +44,7 @@ permissions:
 jobs:
   publish:
     environment: release
-    runs-on: macos-15
+    runs-on: macos-15-arm64
     timeout-minutes: 20
     permissions:
       contents: read
@@ -172,7 +172,7 @@ jobs:
     needs: publish
     if: inputs.operation == 'promote'
     environment: release
-    runs-on: macos-15
+    runs-on: macos-15-arm64
     timeout-minutes: 20
     permissions:
       contents: read

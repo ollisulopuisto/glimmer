@@ -37,7 +37,7 @@ class ReleaseWorkflowTests(unittest.TestCase):
                 end = next_job if next_job != -1 else workflow.index("\n  build:", start)
                 job = workflow[start:end]
                 for required in ("ref: ${{ github.sha }}", "EXPECTED_SHA: ${{ inputs.expected_sha }}",
-                                 "record: ${{ steps.verify.outputs.record }}", "runs-on: macos-15",
+                                 "record: ${{ steps.verify.outputs.record }}", "runs-on: macos-15-arm64",
                                  "DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer",
                                  "SWIFT_TREAT_WARNINGS_AS_ERRORS = YES", "GCC_TREAT_WARNINGS_AS_ERRORS = YES"):
                     self.assertIn(required, job)

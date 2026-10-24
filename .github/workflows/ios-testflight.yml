@@ -47,7 +47,7 @@ jobs:
   gate:
     if:
       github.repository == 'Se7enbrc/glimmer' && github.ref == 'refs/heads/main'
-    runs-on: macos-15
+    runs-on: macos-15-arm64
     timeout-minutes: 10
     outputs:
       artifact: ${{ steps.resolve.outputs.artifact }}
@@ -79,7 +79,7 @@ jobs:
     if:
       github.repository == 'Se7enbrc/glimmer' && github.ref == 'refs/heads/main'
     environment: ios-testflight
-    runs-on: macos-15
+    runs-on: macos-15-arm64
     timeout-minutes: 45
     permissions:
       contents: read

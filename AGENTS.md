@@ -53,7 +53,7 @@ tests and makes the app worse is a regression with a green check mark.
 
 ## Setup and commands
 
-Xcode 26.3 or later. Hosted verification, CodeQL and releases all use Xcode 26.3
+Xcode 26 or later. Hosted verification, CodeQL and releases all use Xcode 26
 on macOS 15.8. Keep their toolchains aligned; the deployment target is 15.8.
 
 ```bash

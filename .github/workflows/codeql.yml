@@ -34,7 +34,7 @@ jobs:
       matrix:
         include:
           - language: swift
-            runner: macos-15
+            runner: macos-15-arm64
             build-mode: manual
           - language: python
             runner: ubuntu-latest

@@ -225,8 +225,8 @@ redirect.
 
 ### Hosted release
 
-The manual **Release** workflow uses GitHub's standard Apple Silicon `macos-15`
-runner with Xcode 26.3, matching Verify and CodeQL. Candidate dispatches accept
+The manual **Release** workflow uses GitHub's standard Apple Silicon `macos-15-arm64`
+runner with Xcode 26, matching Verify and CodeQL. Candidate dispatches accept
 only `release-candidate`; promotion dispatches accept only `main`. Both bind the
 reviewed full SHA to the dispatch, checkout and current upstream branch. Moving
 the branch stops the next protected phase. Runs are serialized, not cancelled by
