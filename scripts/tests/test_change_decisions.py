@@ -16,6 +16,26 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class ChangeDecisionTests(unittest.TestCase):
+    def test_required_gate_checks_compatibility_only_for_build_changes(self):
+        workflow = (ROOT / ".github/workflows/verify.yml").read_text()
+        shell = textwrap.dedent(workflow.rsplit("        run: |\n", 1)[1])
+        cases = [
+            ("success", "success", "true", "success", True),
+            ("success", "success", "true", "failure", False),
+            ("success", "success", "true", "cancelled", False),
+            ("success", "success", "true", "skipped", False),
+            ("success", "success", "false", "skipped", True),
+            ("failure", "success", "false", "skipped", False),
+            ("success", "failure", "true", "success", False),
+        ]
+        for decided, result, build, compatibility, succeeds in cases:
+            with self.subTest(decided=decided, result=result, build=build, compatibility=compatibility):
+                env = {**os.environ, "DECIDED": decided, "RESULT": result,
+                       "BUILD": build, "COMPATIBILITY": compatibility}
+                completed = subprocess.run(["/bin/bash", "-euo", "pipefail", "-c", shell],
+                                           env=env, capture_output=True, timeout=10)
+                self.assertEqual(completed.returncode == 0, succeeds)
+
     def decision(self, workflow, paths, classifier=None, api_status="0"):
         verify = workflow == "verify"
         script = "verify-changed.py" if verify else "codeql-swift-changed.py"

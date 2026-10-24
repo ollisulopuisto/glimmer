@@ -335,11 +335,13 @@ Apple also documents
 
 When active, `VideoDecoder+HDR.configureLayerColorspace` sets:
 
-- `layer.preferredDynamicRange = .high` (on macOS 16+, or
+- `layer.preferredDynamicRange = .high` (on macOS 26+, or
   `wantsExtendedDynamicRangeContent = true` on macOS 15).
-- `layer.setValue(CGColorSpace(name: .itur_2100_PQ), forKey: "colorspace")`, via
+- On macOS 26,
+  `layer.setValue(CGColorSpace(name: .itur_2100_PQ), forKey: "colorspace")`, via
   KVC because the Swift overlay elides the property on the
-  `AVSampleBufferDisplayLayer` subclass.
+  `AVSampleBufferDisplayLayer` subclass. macOS 15 has no layer colorspace
+  property and uses the pixel-buffer color attachments instead.
 
 Per-frame attachments on the `CVPixelBuffer`:
 
@@ -358,7 +360,7 @@ hot-swapped).
 
 When HDR drops back to SDR, `preferredDynamicRange` returns to `.standard` (or
 `wantsExtendedDynamicRangeContent` to `false`), the layer's `colorspace` is
-cleared, and the next-frame fallback attaches BT.709 primaries.
+cleared on macOS 26, and the next-frame fallback attaches BT.709 primaries.
 
 **Backpressure and recovery.** `AVSampleBufferVideoRenderer.status == .failed`
 latches after a bad sample (mid-stream SPS change, dirty AV1 OBU). The present
@@ -395,7 +397,7 @@ bitmask from `/serverinfo`, passed verbatim; see the landmine note in
 `InputForwarder` (`Glimmer/Stream/InputForwarder.swift`, plus the
 `ControllerForwarder` extension) hooks events at the responder level via a
 custom `StreamInputView` installed as the stream window's first responder.
-Earlier revisions used `NSEvent.addLocalMonitorForEvents`, but macOS 15.8's
+Earlier revisions used `NSEvent.addLocalMonitorForEvents`, but macOS 26's
 responder chain consumes events for content views that accept first responder
 before the local-monitor block fires.
 

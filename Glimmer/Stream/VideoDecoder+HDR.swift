@@ -3,16 +3,7 @@
 
 // SPDX-FileCopyrightText: Moonlight Game Streaming Project contributors
 
-//
-//  VideoDecoder+HDR.swift
-//
-//  HDR pipeline extension to `VideoDecoder`. Owns the bits that decide what
-//  CGColorSpace to attach, build the HDR10 MDCV/CLL metadata blobs, drive
-//  AVSampleBufferDisplayLayer.preferredDynamicRange, and provide the
-//  first-frame diagnostic probe.
-//
-//  Source-of-truth implementation contract is `vt_avsamplelayer.mm` from
-//  moonlight-qt; see the call-site comments for the exact line references.
+// Keep color tags and HDR metadata aligned with the display layer's dynamic range.
 
 import AppKit
 import AVFoundation
@@ -26,26 +17,8 @@ extension VideoDecoder {
 
     // MARK: - Display-layer configuration
 
-    /// Set the AVSampleBufferDisplayLayer's `preferredDynamicRange` based
-    /// on the negotiated stream format + the host's HDR-mode signal. Called
-    /// once at stream start from handleStart(), and again from setHDR() if
-    /// the host flips HDR mid-stream.
-    ///
-    /// `preferredDynamicRange` (macOS 26+ replacement for the older
-    /// `wantsExtendedDynamicRangeContent` boolean):
-    ///   * `.high`     - engage full EDR. Used when the stream is 10-bit
-    ///                   AND the host has signalled HDR mode. Per Apple's
-    ///                   header, this is the right choice for "situations
-    ///                   where the user is expected to be focused on the
-    ///                   media" - game streaming is exactly that.
-    ///   * `.standard` - SDR. Used for everything else.
-    ///
-    /// The layer reads the per-frame CGColorSpace off the CVPixelBuffer's
-    /// `kCVImageBufferCGColorSpaceKey` attachment (set in
-    /// `attachFallbackColorspaceIfNeeded` for untagged-bitstream hosts,
-    /// otherwise propagated from the bitstream's VUI by VT). There is no
-    /// `colorspace` property on AVSampleBufferDisplayLayer itself -
-    /// moonlight-qt's vt_avsamplelayer.mm uses the same per-buffer path.
+    /// Engage full EDR only when both the negotiated format and the PC signal HDR.
+    /// Pixel-buffer attachments carry the colorspace; the layer controls compositing.
     @MainActor
     func configureLayerColorspace() {
         guard let layer = displayLayer else { return }
@@ -53,29 +26,27 @@ extension VideoDecoder {
         let is10Bit = (streamVideoFormat & StreamProtocol.VIDEO_FORMAT_MASK_10BIT) != 0
         let active = is10Bit && hdrEnabled
 
-        // preferredDynamicRange is idempotent; guard first-call log
-        // to spot stream-start vs mid-stream HDR transitions.
-#if compiler(>=6.4)
-        let preferred: CALayer.DynamicRange = active ? .high : .standard
-        layer.preferredDynamicRange = preferred
-        let prefRangeStr = preferred.rawValue
-#else
-        if #available(macOS 15.0, *) {
+        #if compiler(>=6.2)
+        if #available(macOS 26, *) {
+            layer.preferredDynamicRange = active ? .high : .standard
+        } else {
             layer.wantsExtendedDynamicRangeContent = active
         }
-        let prefRangeStr = active ? "wantsEDR" : "standard"
-#endif
+        #else
+        layer.wantsExtendedDynamicRangeContent = active
+        #endif
+        let prefRangeStr = Self.dynamicRangeDescription(of: layer)
 
-        // Compositing colorspace engages EDR and prevents shadow crushing.
-        // KVC accesses CALayer.colorspace elided on the display layer subclass.
-        // the Swift import widens. Re-confirmed against the released
-        // macOS 26 SDK.
-        if active {
-            if let cs = CGColorSpace(name: CGColorSpace.itur_2100_PQ) {
-                layer.setValue(cs, forKey: "colorspace")
+        // macOS 15 uses pixel-buffer color tags; its layer has no colorspace setter.
+        // On macOS 26, the compositing colorspace also engages full EDR.
+        if #available(macOS 26, *) {
+            if active {
+                if let cs = CGColorSpace(name: CGColorSpace.itur_2100_PQ) {
+                    layer.setValue(cs, forKey: "colorspace")
+                }
+            } else {
+                layer.setValue(nil, forKey: "colorspace")
             }
-        } else {
-            layer.setValue(nil, forKey: "colorspace")
         }
         if !didConfigureLayerOnce {
             didConfigureLayerOnce = true
@@ -105,6 +76,18 @@ extension VideoDecoder {
                 )
             }
         }
+    }
+
+    private static func dynamicRangeDescription(of layer: AVSampleBufferDisplayLayer) -> String {
+        #if compiler(>=6.2)
+        if #available(macOS 26, *) {
+            return layer.preferredDynamicRange.rawValue
+        } else {
+            return layer.wantsExtendedDynamicRangeContent ? "wantsEDR" : "standard"
+        }
+        #else
+        return layer.wantsExtendedDynamicRangeContent ? "wantsEDR" : "standard"
+        #endif
     }
 
     // MARK: - HDR metadata
@@ -460,21 +443,15 @@ extension VideoDecoder {
         let derivedKey: String
     }
 
-    /// Main-thread half of the first-frame probe: read the layer's dynamic-
-    /// range/colorspace + the resolved NSScreen's EDR headroom and geometry,
-    /// then emit the single diagnostic log entry. Split out of
-    /// `probeAndLogPixelBufferAttachments` to keep each unit focused.
+    /// Layer and screen diagnostics need the main actor, unlike the pixel-buffer probe.
     @MainActor
     private func logFirstFrameProbe(_ facts: FirstFrameProbeFacts) {
         let layer = self.displayLayer
-#if compiler(>=6.4)
-        let prefRange = layer?.preferredDynamicRange.rawValue ?? "n/a"
-#else
-        let prefRange = layer.map { $0.wantsExtendedDynamicRangeContent ? "wantsEDR" : "standard" } ?? "n/a"
-#endif
+        let prefRange = layer.map { Self.dynamicRangeDescription(of: $0) } ?? "n/a"
         // Guard KVC colorspace read with CFGetTypeID to avoid downcast traps.
         let layerColorspaceName: String = {
-            guard let csAny = layer?.value(forKey: "colorspace") as CFTypeRef?,
+            guard #available(macOS 26, *),
+                  let csAny = layer?.value(forKey: "colorspace") as CFTypeRef?,
                   CFGetTypeID(csAny) == CGColorSpace.typeID else {
                 return "n/a"
             }

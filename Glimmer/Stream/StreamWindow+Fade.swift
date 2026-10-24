@@ -87,9 +87,7 @@ extension StreamWindow {
     nonisolated static func streamingPresentationOptions(coversNotch: Bool) -> NSApplication.PresentationOptions {
         var options: NSApplication.PresentationOptions = [.hideMenuBar, .hideDock]
         if !coversNotch { options.insert(.fullScreen) }
-        #if compiler(>=6.4)
         options.insert(.disableCursorLocationAssistance)
-#endif
         if #available(macOS 27, *) {
             // NSApplication.h in SDK 27 defines DisableScreenCornerInteractions as bit 15.
             // Use its public option value so SDK 26 builds retain the same behavior.

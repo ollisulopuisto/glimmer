@@ -127,25 +127,78 @@ struct SystemServiceSeamTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
-    func siriRelearnsPCNamesAfterLaunchAndOnRename() async {
+    func siriTracksRepeatedRenamesAndPairingChangesWithoutUnchangedReloads() async {
         let model = AppModel()
         model.hosts = [pc()]
+        var names: [[String]] = []
         let (updates, signal) = AsyncStream<Void>.makeStream()
-        let tracking = GlimmerShortcuts.trackPCs(of: model, bootstrap: { _ in Task {} }, update: { signal.yield() })
+        let tracking = GlimmerShortcuts.trackPCs(of: model, bootstrap: { _ in Task {} }, update: {
+            names.append(model.hosts.map { $0.displayName })
+            signal.yield()
+        })
         defer { tracking.cancel() }
         var waiter = updates.makeAsyncIterator()
         #expect(await waiter.next() != nil)
 
-        // Unchanged reload
-        model.hosts = [model.hosts[0]]
-        // It shouldn't yield again here, but if we wait, it might block. We can test rename:
-        model.hosts = [pc(customName: "Living Room")]
-        #expect(await waiter.next() != nil)
+        model.hosts = [pc(apps: ["Desktop"])]
+        await DispatchQueue.main.drainForTest()
+        #expect(names == [["Den"]])
 
-        // Cancel
+        for name in ["Living Room", "Bedroom"] {
+            model.hosts = [pc(customName: name)]
+            #expect(await waiter.next() != nil)
+        }
+        model.hosts.append(pc(id: "pc-2", customName: "Study"))
+        #expect(await waiter.next() != nil)
+        model.hosts.removeFirst()
+        #expect(await waiter.next() != nil)
+        #expect(names == [["Den"], ["Living Room"], ["Bedroom"], ["Bedroom", "Study"], ["Study"]])
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func cancelledPCTrackingStopsUpdatingShortcuts() async {
+        let model = AppModel()
+        model.hosts = [pc()]
+        var updates = 0
+        let (events, signal) = AsyncStream<Void>.makeStream()
+        let tracking = GlimmerShortcuts.trackPCs(of: model, bootstrap: { _ in Task {} }, update: {
+            updates += 1
+            signal.yield()
+        })
+        defer { tracking.cancel() }
+        var waiter = events.makeAsyncIterator()
+        #expect(await waiter.next() != nil)
         tracking.cancel()
+        await tracking.value
         model.hosts = [pc(customName: "Bedroom")]
-        // Since it's cancelled, there should be no more updates
+        await DispatchQueue.main.drainForTest()
+        #expect(updates == 1)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func dockTrackingReadsCommittedStateAcrossRepeatedStreamTransitions() async {
+        let model = AppModel()
+        let delegate = AppDelegate()
+        let (updates, signal) = AsyncStream<Bool>.makeStream()
+        delegate.trackStreaming(mgr: model) { _ in signal.yield(model.isStreaming) }
+        var waiter = updates.makeAsyncIterator()
+        for streaming in [true, false, true, false] {
+            model.isStreaming = streaming
+            #expect(await waiter.next() == streaming)
+        }
+    }
+
+    @Test func dockTrackingDoesNotRetainTheDelegate() async {
+        let model = AppModel()
+        var delegate: AppDelegate? = AppDelegate()
+        weak var observedDelegate = delegate
+        var refreshes = 0
+        delegate?.trackStreaming(mgr: model) { _ in refreshes += 1 }
+        delegate = nil
+        #expect(observedDelegate == nil)
+        model.isStreaming = true
+        await DispatchQueue.main.drainForTest()
+        #expect(refreshes == 0)
     }
 
     // MARK: Display defaults

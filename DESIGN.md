@@ -123,11 +123,11 @@ only thing Glimmer brings of its own is Eclipse Violet, and it appears only
 where you act.
 
 Surfaces are tactile, but taste comes first. The things you can press feel like
-objects: system materials that refracts what sits behind the window, a soft
-downward shadow, a slight give when pressed (scale 0.985). Everything else stays
-flat: facts, labels, explanations and status sit as plain text on the surface,
-with no chrome. Depth marks what can be pressed or what floats above the window,
-never decoration.
+objects: system materials that blur what sits behind the window, a soft downward
+shadow, a slight give when pressed (scale 0.985). Everything else stays flat:
+facts, labels, explanations and status sit as plain text on the surface, with no
+chrome. Depth marks what can be pressed or what floats above the window, never
+decoration.
 
 The launcher is one sheet of regular material, sized to its content. The PC's
 name is its title and its switcher, the specs sit under the name, and each app
@@ -143,7 +143,7 @@ redrawn, recoloured or reinterpreted.
 - One brand hue, Eclipse Violet, used only where you act: the app buttons, the
   state button and a primary capsule.
 - The launcher is one sheet of system materials with no card inside it.
-- system materials and soft black shadows only on things you can press or that
+- System materials and soft black shadows only on things you can press or that
   float.
 - SF system text styles throughout; footnote-size secondary text does the
   explaining.
@@ -168,9 +168,9 @@ already uses.
   glowing.
 
 The primary surface is the accent itself, opaque: lightened with 10% white at
-the top left and deepened with 18% black at the bottom right, under system
-materials tinted with the accent at 0.15, with a 1pt white rim fading from 30%
-to 2% top to bottom.
+the top left and deepened with 18% black at the bottom right, with a 1pt white
+rim fading from 30% to 2% top to bottom. Opaque controls need no material behind
+their fill.
 
 ### Neutral
 
@@ -180,9 +180,9 @@ to 2% top to bottom.
   line, trailing play glyphs, addresses.
 - **Tertiary Label** (#0000003F, white at 25% in dark): the quietest facts, such
   as "Last played".
-- Backgrounds are glass and system materials rather than colours: frosted Liquid
-  Glass for the launcher window, thin material on Settings, sheets and the
-  toast, quaternary fills for inset panels.
+- Backgrounds use system materials: regular material for the launcher window,
+  thin material on Settings, sheets and the toast, quaternary fills for inset
+  panels.
 
 ### Status
 
@@ -206,8 +206,8 @@ a violet or grey slab behind content; the window is the surface.
 
 **The Dot, Not Fill Rule.** Status colours appear as a small dot (6 to 7pt), a
 glyph or a line of text, never as a filled surface. The one exception is the
-connect-failure banner: glass with a faint red tint (0.12) and a 1pt red stroke,
-where the stroke carries the severity.
+connect-failure banner: material with a faint red tint (0.12) and a 1pt red
+stroke, where the stroke carries the severity.
 
 ## Typography
 
@@ -277,14 +277,12 @@ the container.
 ## Elevation & Depth
 
 Glimmer is tactile but restrained, with depth reserved for surfaces that respond
-to touch or float over the window. system materials
-(`\.background\(\.regularMaterial\)`) is the primary depth cue. The launcher
-window itself is system materials, see-through enough to show colour behind it
-and blurred enough that text behind turns to colour. On it: the app buttons and
-the state button on the primary surface, regular material on the readiness chip,
-the gear and the overflow menu, and plain glass on the PC tiles in Settings. The
-refraction and colour behind the glass come from the desktop showing through,
-not from a gradient to remove. Shadows are black, soft and always cast downward.
+to touch or float over the window. System materials (`.regularMaterial`) provide
+depth on neutral surfaces. The launcher window blurs the desktop behind it. The
+app buttons and state button use an opaque accent gradient; the readiness chip,
+overflow menu and PC tiles use regular material. Secondary controls use native
+button styles. Tints sit above the material and below the content so labels stay
+clear. Shadows are black, soft and always cast downward.
 
 ### Shadow Vocabulary
 
@@ -295,9 +293,9 @@ not from a gradient to remove. Shadows are black, soft and always cast downward.
 
 ### Named Rules
 
-**The Press, Not Pose Rule.** Depth (glass, shadow or scale) marks something you
-can press or something floating above the window. Facts and labels sit flat on
-the surface.
+**The Press, Not Pose Rule.** Depth (material, shadow or scale) marks something
+you can press or something floating above the window. Facts and labels sit flat
+on the surface.
 
 **The One Light Rule.** Every shadow is black, at 12 to 20% opacity, offset
 downward. No coloured glows, no inner shadows, no upward light.
@@ -354,7 +352,7 @@ Tactile and confident: the things on screen that ask to be pressed.
 
 ### Chips
 
-- **Readiness chip:** a glass capsule with 4 by 10pt of padding, a 7pt status
+- **Readiness chip:** a material capsule with 4 by 10pt of padding, a 7pt status
   dot, a caption-medium label and an optional 9pt route glyph (a cable plug for
   wired, Wi-Fi arcs for wireless). The dot pulses while your own stream is live,
   unless Reduce Motion is on.
@@ -381,26 +379,27 @@ Tactile and confident: the things on screen that ask to be pressed.
 ### Connect Banner
 
 - Sits at the top of the launcher only when a connection fails: the shared
-  failure copy, a borderless dismiss button, 10 by 14pt of padding, glass tinted
-  red at 0.12 with a 1pt red stroke at 12pt radius. It slides in from the top
-  and appears at once, never behind a delay.
+  failure copy, a borderless dismiss button, 10 by 14pt of padding, material
+  tinted red at 0.12 with a 1pt red stroke at 12pt radius. It slides in from the
+  top and appears at once, never behind a delay.
 
 ### PC Tiles (Settings)
 
 - The `display` glyph on a colour picked by hashing the PC's ID, the name in
   headline, the address in caption monospaced, and "Last played" in tertiary.
   The PC's apps appear as up to three plain secondary glyphs, not buttons. Plain
-  glass at 16pt. The yellow star alone marks the default PC.
+  material at 16pt. The yellow star alone marks the default PC.
 
 ### Inputs / Fields
 
 - **Style:** standard system text fields, pickers, toggles and steppers in a
   grouped Form. No custom field chrome.
-- **Hotkey recorder:** an interactive glass capsule, at least 80 by 22pt,
-  showing the chord in body medium monospaced text. While recording, the glass
-  takes an accent tint (0.22), a 2pt accent ring and accent text; a rejected
-  chord explains itself in a line underneath and recording stays open. A saved
-  chord is announced to VoiceOver, and VoiceOver's own keys pass through.
+- **Hotkey recorder:** a material capsule on a real button, at least 80 by 22pt,
+  showing the chord in body medium monospaced text. While recording, the
+  material takes an accent tint (0.22), a 2pt accent ring and accent text; a
+  rejected chord explains itself in a line underneath and recording stays open.
+  A saved chord is announced to VoiceOver, and VoiceOver's own keys pass
+  through.
 - **Static key notation:** fixed chords appear as plain monospaced secondary
   text, not as badges, because they cannot be pressed.
 
@@ -418,7 +417,7 @@ Tactile and confident: the things on screen that ask to be pressed.
   own panels are. The PC card has no title: the PC's name is the title. Big
   numbers are title semibold with monospaced digits; the chart draws bandwidth
   in the accent, latency in secondary and frames in green, with orange for a
-  short second. The footer holds an "Open Glimmer" plain button, a glass gear
+  short second. The footer holds an "Open Glimmer" plain button, a bordered gear
   for Settings and a "…" menu with "Check for Updates…" and "Quit Glimmer".
 
 ### Stream-Ended Toast

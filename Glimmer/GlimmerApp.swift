@@ -116,7 +116,7 @@ struct GlimmerApp: App {
                 // connect surface's real width (its .horizontal padding): a floor
                 // below it leaves the window a range to be dragged through.
                 .frame(minWidth: 580)
-                                .containerBackground(.regularMaterial, for: .window)
+                .containerBackground(.regularMaterial, for: .window)
         }
         .windowStyle(.hiddenTitleBar)
         // Exactly its content, never draggable bigger: nothing in the launcher grows, so a
@@ -272,12 +272,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @MainActor
-    private func trackStreaming(mgr: AppModel) {
+    func trackStreaming(
+        mgr: AppModel,
+        refresh: @escaping @MainActor (AppDelegate) -> Void = { $0.refreshActivationPolicy() }
+    ) {
         withObservationTracking { _ = mgr.isStreaming } onChange: { [weak self, weak mgr] in
             Task { @MainActor [weak self, weak mgr] in
                 guard let self, let mgr else { return }
-                self.refreshActivationPolicy()
-                self.trackStreaming(mgr: mgr)
+                refresh(self)
+                self.trackStreaming(mgr: mgr, refresh: refresh)
             }
         }
     }

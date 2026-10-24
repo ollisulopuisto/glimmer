@@ -115,8 +115,8 @@ struct ConnectBanner: View {
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
-                .background(.regularMaterial, in: .rect(cornerRadius: 12))
                 .background(Color.red.opacity(0.12), in: .rect(cornerRadius: 12))
+                .background(.regularMaterial, in: .rect(cornerRadius: 12))
                 .overlay {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .stroke(Color.red, lineWidth: 1)

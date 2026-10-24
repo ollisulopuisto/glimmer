@@ -12,14 +12,10 @@
 import SwiftUI
 
 extension InsettableShape {
-    /// The primary controls' violet: the opaque accent gradient under accent-tinted
-    /// glass, a lit 1pt rim and a soft lift. The Stream button and the app buttons share it.
+    /// The primary controls share an opaque accent gradient, a lit rim and a soft lift.
     @MainActor
     func accentSurface() -> some View {
         fill(accentSurfaceGradient)
-            // Interactive: the native hover and press response a violet control otherwise lacks.
-            .background(.regularMaterial, in: self)
-            .background(Color.accentColor.opacity(0.15), in: self)
             .overlay {
                 strokeBorder(LinearGradient(colors: [.white.opacity(0.30), .white.opacity(0.02)],
                                             startPoint: .top, endPoint: .bottom), lineWidth: 1)

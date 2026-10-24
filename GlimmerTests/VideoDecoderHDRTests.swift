@@ -147,6 +147,18 @@ struct VideoDecoderHDRTests {
 
     // MARK: Layer HDR mode
 
+    private func expectDynamicRange(of layer: AVSampleBufferDisplayLayer, hdr: Bool) {
+        #if compiler(>=6.2)
+        if #available(macOS 26, *) {
+            #expect(layer.preferredDynamicRange == (hdr ? .high : .standard))
+        } else {
+            #expect(layer.wantsExtendedDynamicRangeContent == hdr)
+        }
+        #else
+        #expect(layer.wantsExtendedDynamicRangeContent == hdr)
+        #endif
+    }
+
     @Test func tenBitHDRStreamEngagesTheLayerAndBackOff() {
         let decoder = VideoDecoder()
         let layer = AVSampleBufferDisplayLayer()
@@ -160,26 +172,16 @@ struct VideoDecoderHDRTests {
         decoder.onHDRActiveChanged = { flips.append($0) }
 
         decoder.setHDR(enabled: true)
-        #if compiler(>=6.4)
-        #expect(layer.preferredDynamicRange == .high)
-#else
-        if #available(macOS 15.0, *) {
-            #expect(layer.wantsExtendedDynamicRangeContent == true)
+        expectDynamicRange(of: layer, hdr: true)
+        if #available(macOS 26, *) {
+            #expect(Self.colorSpaceName(of: layer) == CGColorSpace.itur_2100_PQ)
         }
-#endif
-        #expect(Self.colorSpaceName(of: layer) == CGColorSpace.itur_2100_PQ)
         #expect(decoder.isHDRActive)
         #expect(decoder.hdrMetadataStore.snapshot.mdcv?.count == 24)
 
         decoder.setHDR(enabled: false)
-        #if compiler(>=6.4)
-        #expect(layer.preferredDynamicRange == .standard)
-#else
-        if #available(macOS 15.0, *) {
-            #expect(layer.wantsExtendedDynamicRangeContent == false)
-        }
-#endif
-        #expect(layer.value(forKey: "colorspace") == nil)
+        expectDynamicRange(of: layer, hdr: false)
+        #expect(Self.colorSpaceName(of: layer) == nil)
         #expect(!decoder.isHDRActive)
         #expect(decoder.hdrMetadataStore.snapshot == .empty)
         #expect(flips == [true, false])
@@ -197,13 +199,7 @@ struct VideoDecoderHDRTests {
 
         decoder.setHDR(enabled: true)
         #expect(decoder.hdrEnabled)
-        #if compiler(>=6.4)
-        #expect(layer.preferredDynamicRange == .standard)
-#else
-        if #available(macOS 15.0, *) {
-            #expect(layer.wantsExtendedDynamicRangeContent == false)
-        }
-#endif
+        expectDynamicRange(of: layer, hdr: false)
         #expect(!decoder.isHDRActive)
         #expect(flips.isEmpty)
     }
@@ -254,7 +250,8 @@ struct VideoDecoderHDRTests {
     }
 
     private static func colorSpaceName(of layer: AVSampleBufferDisplayLayer) -> CFString? {
-        guard let value = layer.value(forKey: "colorspace") as CFTypeRef?,
+        guard #available(macOS 26, *),
+              let value = layer.value(forKey: "colorspace") as CFTypeRef?,
               CFGetTypeID(value) == CGColorSpace.typeID else { return nil }
         return unsafeDowncast(value, to: CGColorSpace.self).name
     }

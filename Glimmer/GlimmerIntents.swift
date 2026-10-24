@@ -47,9 +47,10 @@ struct StreamIntent: AppIntent {
 
     @available(macOS, deprecated: 26.0)
     static var openAppWhenRun: Bool { true }
-#if compiler(>=6.4)
+    #if compiler(>=6.2)
+    @available(macOS 26, *)
     static var supportedModes: IntentModes { .foreground }
-#endif
+    #endif
 
     @Parameter(title: "PC")
     var pc: PCEntity

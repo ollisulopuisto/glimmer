@@ -253,9 +253,7 @@ struct StreamWindowFirstFrameTests {
     @Test func coverOptionsTurnOffShakeToFindAndHotCorners() {
         for coversNotch in [true, false] {
             let options = StreamWindow.streamingPresentationOptions(coversNotch: coversNotch)
-            #if compiler(>=6.4)
             #expect(options.contains(.disableCursorLocationAssistance))
-#endif
             if #available(macOS 27, *) {
                 #expect(options.contains(NSApplication.PresentationOptions(rawValue: 1 << 15)))
                 #if compiler(>=6.4)

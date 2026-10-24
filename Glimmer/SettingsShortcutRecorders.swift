@@ -112,8 +112,8 @@ struct HotkeyBadge: View {
                         .frame(minWidth: 80, minHeight: 22)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 4)
-                                                .background(.regularMaterial, in: .capsule)
                         .background(isCapturing ? Color.accentColor.opacity(0.22) : Color.clear, in: .capsule)
+                        .background(.regularMaterial, in: .capsule)
                         .overlay(
                             Capsule().stroke(
                                 isCapturing ? Color.accentColor : Color.clear,

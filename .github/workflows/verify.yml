@@ -207,6 +207,48 @@ jobs:
             printf 'Credential scanner findings are withheld; never paste keys or tokens into an issue.\n'
           } >> "$GITHUB_STEP_SUMMARY"
 
+  compatibility:
+    name: macOS 15 compatibility
+    needs: changes
+    if: needs.changes.outputs.build == 'true'
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check compatibility toolchain
+        run: |
+          test "$(uname -m)" = arm64
+          test "$(sw_vers -productVersion | cut -d. -f1)" = 15
+          sw_vers
+          xcodebuild -version
+          xcrun swift --version
+          XCODE_XCCONFIG_FILE="$RUNNER_TEMP/glimmer-compatibility.xcconfig"
+          cat > "$XCODE_XCCONFIG_FILE" <<'XCCONFIG'
+          SWIFT_TREAT_WARNINGS_AS_ERRORS = YES
+          GCC_TREAT_WARNINGS_AS_ERRORS = YES
+          XCCONFIG
+          printf 'XCODE_XCCONFIG_FILE=%s\n' "$XCODE_XCCONFIG_FILE" >> "$GITHUB_ENV"
+
+      - name: Test on macOS 15 and build the network helper
+        run: make test helper-build
+
+      - name: Check embedded minimum versions
+        run: |
+          /usr/libexec/PlistBuddy -c 'Print LSMinimumSystemVersion' \
+            'build/Build/Products/Debug/Glimmer.app/Contents/Info.plist' | grep -Fx 15.8
+          /usr/libexec/PlistBuddy -c 'Print LSMinimumSystemVersion' \
+            'build/Build/Products/Debug/Glimmer.app/Contents/Library/LoginItems/Glimmer Login Helper.app/Contents/Info.plist' \
+            | grep -Fx 15.8
+
   fuzz:
     name: libFuzzer
     needs: changes
@@ -226,7 +268,7 @@ jobs:
   # The required check: green only when every part of the gate passed.
   gate:
     name: macOS
-    needs: [changes, verify]
+    needs: [changes, verify, compatibility]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -235,4 +277,9 @@ jobs:
         env:
           DECIDED: ${{ needs.changes.result }}
           RESULT: ${{ needs.verify.result }}
-        run: test "$DECIDED" = success && test "$RESULT" = success
+          BUILD: ${{ needs.changes.outputs.build }}
+          COMPATIBILITY: ${{ needs.compatibility.result }}
+        run: |
+          test "$DECIDED" = success
+          test "$RESULT" = success
+          if [ "$BUILD" = true ]; then test "$COMPATIBILITY" = success; fi

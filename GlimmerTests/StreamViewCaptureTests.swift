@@ -159,12 +159,12 @@ struct StreamViewCaptureTests {
         let forwarder = InputForwarder()
         #expect(forwarder.diagnosticEventTypeName(.scrollWheel) == "scrollWheel")
         #expect(forwarder.diagnosticEventTypeName(.otherMouseDown) == "otherMouseDown")
-#if compiler(>=6.4)
+        #if compiler(>=6.2)
         if #available(macOS 26.0, *) {
             #expect(forwarder.diagnosticEventTypeName(.mouseCancelled)
                 == "type(\(NSEvent.EventType.mouseCancelled.rawValue))")
         }
-#endif
+        #endif
         if let unmapped = NSEvent.EventType(rawValue: 999) {
             #expect(forwarder.diagnosticEventTypeName(unmapped) == "type(999)")
         }

@@ -437,8 +437,8 @@ private struct PINTiles: View {
                 Text(String(ch).trimmingCharacters(in: .whitespaces))
                     .font(.system(size: 44, weight: .semibold, design: .monospaced))
                     .frame(maxWidth: .infinity, minHeight: 78)
-                    .background(.regularMaterial, in: .rect(cornerRadius: 14))
                     .background(Color.accentColor.opacity(0.12), in: .rect(cornerRadius: 14))
+                    .background(.regularMaterial, in: .rect(cornerRadius: 14))
                     .allowsHitTesting(false)
             }
         }

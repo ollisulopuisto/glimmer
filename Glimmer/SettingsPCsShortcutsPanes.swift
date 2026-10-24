@@ -64,7 +64,7 @@ struct PCsPane: View {
         .sheet(isPresented: $showPairSheet) {
             PairSheet(initialAddress: initialPairAddress)
                 .environment(model)
-                                .presentationBackground(.thinMaterial)
+                .presentationBackground(.thinMaterial)
         }
     }
 }
@@ -137,7 +137,7 @@ struct PCTile: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.regularMaterial, in: .rect(cornerRadius: 16))
+        .background(.regularMaterial, in: .rect(cornerRadius: 16))
         // Shared right-click menu, the same items as the visible button above
         // and the launcher hero's menu.
         .hostContextMenu(host)

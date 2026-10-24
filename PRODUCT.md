@@ -27,7 +27,7 @@ stream, and someone using Glimmer mistaking it for something Apple shipped.
 
 Native leads. Socket, decoder, display, audio and input all run in one Swift
 process, with no external player and no C engine, and the app lives where Mac
-apps live: Liquid Glass windows, the menu bar, Shortcuts, Siri, Spotlight and a
+apps live: native windows, the menu bar, Shortcuts, Siri, Spotlight and a
 command line in the app binary.
 
 Two claims back it up:
@@ -73,8 +73,8 @@ that inspired Glimmer; it is not the protocol's name.
 - Glimmer is free, now and always. Every feature belongs to every user.
 - The name is Glimmer. The app icon (`docs/assets/icon-512.png`) is final.
 - The purple accent is part of the identity; design works inside it.
-- System controls only: SwiftUI and AppKit with Liquid Glass. A custom look is a
-  style on a real control, never a drawn widget, and keeps native focus,
+- System controls only: SwiftUI and AppKit with system materials. A custom look
+  is a style on a real control, never a drawn widget, and keeps native focus,
   keyboard and VoiceOver behaviour.
 
 ## Evidence on Hand

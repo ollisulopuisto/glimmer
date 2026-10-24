@@ -53,8 +53,9 @@ tests and makes the app worse is a regression with a green check mark.
 
 ## Setup and commands
 
-Xcode 26.6 or later. Hosted verification, CodeQL and releases all use Xcode 26.6
-on macOS 15.8. Keep their toolchains aligned; the deployment target is 15.8.
+Local builds support Xcode 26.3 or later. Hosted verification, CodeQL and
+releases use Xcode 26.6 on macOS 26. A separate compatibility job runs tests
+with Xcode 26.3 on macOS 15. The deployment target is 15.8.
 
 ```bash
 brew install python swiftlint actionlint trufflehog pre-commit

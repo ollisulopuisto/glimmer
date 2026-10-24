@@ -209,9 +209,9 @@ struct EmptyPairingState: View {
         VStack(spacing: 26) {
             ZStack {
                 Circle()
+                    .fill(.regularMaterial)
                     .frame(width: 144, height: 144)
-                    .background(.regularMaterial, in: .circle)
-                    .background(Color.accentColor.opacity(0.18), in: .circle)
+                    .overlay { Circle().fill(Color.accentColor.opacity(0.18)) }
                     .overlay {
                         Circle()
                             .stroke(

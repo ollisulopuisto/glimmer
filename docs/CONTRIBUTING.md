@@ -10,7 +10,7 @@ icon: code
 Required:
 
 - macOS 15.8 or newer
-- Xcode 26.6 or later (Swift 6, `swiftc`, `xcodebuild`, `xcrun`)
+- Xcode 26.3 or later (Swift 6, `swiftc`, `xcodebuild`, `xcrun`)
 - Homebrew
 - Python 3.10 or newer, for release tooling and its regression tests
 - TruffleHog 3.97.8 or newer, for the required secret-scan flags
@@ -475,20 +475,23 @@ Practically, before you call something done:
   commit in a clean worktree and run `make verify`. Record that commit SHA and
   the checks in the review. Hosted Verify runs the same gate as three parallel
   jobs (`make check` with every pre-commit hook, `make test`, `make test-asan`)
-  on Apple Silicon macOS 15.8 runners with Xcode 26.6 and compiler warnings
-  treated as errors; the required `macOS` check passes only when all three do.
-  The checks and tests jobs measure coverage and upload the reports. A separate
-  `libFuzzer` job runs `scripts/fuzz.sh` for 30 seconds per target; it is not
-  part of the required check. Every `main` commit gets its own Verify and CodeQL
-  run, and a newer push to a pull request replaces its older run. PR jobs
-  receive no signing credentials and cannot publish releases.
+  on Apple Silicon macOS 26 runners with Xcode 26.6 and compiler warnings
+  treated as errors. A separate compatibility job runs the tests and builds the
+  network helper on macOS 15 with Xcode 26.3. The required `macOS` check passes
+  only when all applicable jobs do. The checks and tests jobs measure coverage
+  and upload the reports. A separate `libFuzzer` job runs `scripts/fuzz.sh` for
+  30 seconds per target; it is not part of the required check. Every `main`
+  commit gets its own Verify and CodeQL run, and a newer push to a pull request
+  replaces its older run. PR jobs receive no signing credentials and cannot
+  publish releases.
 
 Hosted verification, CodeQL and releases use the same Xcode 26.6 toolchain on
-macOS 15.8. These checks exercise the minimum supported OS family, but do not
-replace real streaming checks of audio devices, mouse capture and controllers.
-The macOS 27 Hot Corner option uses its documented public enum value so builds
-made with Xcode 26 preserve that behavior on newer systems. Release signing uses
-a separate protected workflow; see [RELEASE.md](RELEASE.md).
+macOS 26. The additional macOS 15 compatibility job exercises the minimum
+supported OS family with Xcode 26.3. Neither replaces real streaming checks of
+audio devices, mouse capture and controllers. The macOS 27 Hot Corner option
+uses its documented public enum value so builds made with Xcode 26 preserve that
+behavior on newer systems. Release signing uses a separate protected workflow;
+see [RELEASE.md](RELEASE.md).
 
 CodeQL scans Swift, Python and GitHub Actions with the `security-extended` query
 suite on pull requests, including approved fork PRs, and on every `main` commit.
