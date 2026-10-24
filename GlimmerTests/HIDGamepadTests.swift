@@ -272,11 +272,17 @@ struct HIDGamepadTests {
     }
 
     /// Twelve buttons (cookies 1-12), X/Y/Z/Rz sticks, Rx/Ry-style 0x33/0x34 triggers and a hat.
-    private static let padElements: [HIDGamepadElement] = (1...12).map {
-        HIDGamepadElement(cookie: UInt32($0), page: 9, usage: UInt32($0), kind: .button)
-    } + [(20, 0x30), (21, 0x31), (22, 0x32), (23, 0x35), (24, 0x33), (25, 0x34)].map {
-        HIDGamepadElement(cookie: $0.0, page: 1, usage: $0.1, kind: .axis)
-    } + [HIDGamepadElement(cookie: 40, page: 1, usage: 0x39, kind: .hat)]
+    private static let padElements: [HIDGamepadElement] = {
+        var elements = (UInt32(1)...12).map {
+            HIDGamepadElement(cookie: $0, page: 9, usage: $0, kind: .button)
+        }
+        let axes: [(cookie: UInt32, usage: UInt32)] = [
+            (20, 0x30), (21, 0x31), (22, 0x32), (23, 0x35), (24, 0x33), (25, 0x34)
+        ]
+        elements += axes.map { HIDGamepadElement(cookie: $0.cookie, page: 1, usage: $0.usage, kind: .axis) }
+        elements.append(HIDGamepadElement(cookie: 40, page: 1, usage: 0x39, kind: .hat))
+        return elements
+    }()
 
     private static func padReadings() -> HIDGamepadReadings {
         var logical: [UInt32: HIDGamepadElement.AxisRange] = [40: .init(minimum: 0, maximum: 7)]
