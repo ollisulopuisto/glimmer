@@ -123,13 +123,13 @@ only thing Glimmer brings of its own is Eclipse Violet, and it appears only
 where you act.
 
 Surfaces are tactile, but taste comes first. The things you can press feel like
-objects: Liquid Glass that refracts what sits behind the window, a soft downward
+objects: system materials that refracts what sits behind the window, a soft downward
 shadow, a slight give when pressed (scale 0.985). Everything else stays flat:
-facts, labels, explanations and status sit as plain text on the glass, with no
+facts, labels, explanations and status sit as plain text on the surface, with no
 chrome. Depth marks what can be pressed or what floats above the window, never
 decoration.
 
-The launcher is one sheet of frosted glass, sized to its content. The PC's name
+The launcher is one sheet of regular material, sized to its content. The PC's name
 is its title and its switcher, the specs sit under the name, and each app is a
 violet button that streams it. There is no card inside the window: the window is
 the surface. Four looks have been tried and rejected: a neutral grey card (the
@@ -142,8 +142,8 @@ recoloured or reinterpreted.
 
 - One brand hue, Eclipse Violet, used only where you act: the app buttons, the
   state button and a primary capsule.
-- The launcher is one sheet of frosted Liquid Glass with no card inside it.
-- Liquid Glass and soft black shadows only on things you can press or that
+- The launcher is one sheet of system materials with no card inside it.
+- system materials and soft black shadows only on things you can press or that
   float.
 - SF system text styles throughout; footnote-size secondary text does the
   explaining.
@@ -153,7 +153,7 @@ recoloured or reinterpreted.
 
 ## Colors
 
-One saturated violet on frosted glass, with the status colours that macOS
+One saturated violet on regular material, with the status colours that macOS
 already uses.
 
 ### Primary
@@ -164,11 +164,11 @@ already uses.
   state and the pair sheet's main action. As a tint: the PC glyph in the
   launcher's header, switches, focus rings and the pairing glyph.
 - **Eclipse Violet, night** (#A847E0 dark, oklch(59.5% 0.227 310)): the same
-  accent in dark appearance, lifted so it reads against dark glass without
+  accent in dark appearance, lifted so it reads against dark material without
   glowing.
 
 The primary surface is the accent itself, opaque: lightened with 10% white at
-the top left and deepened with 18% black at the bottom right, under Liquid Glass
+the top left and deepened with 18% black at the bottom right, under system materials
 tinted with the accent at 0.15, with a 1pt white rim fading from 30% to 2% top
 to bottom.
 
@@ -202,7 +202,7 @@ secondary or tertiary accent, and violet never marks status.
 
 **The Violet Acts Rule.** Violet fills only what acts: the app buttons, the
 state button and a primary capsule; elsewhere it is a tint on a glyph. Never put
-a violet or grey slab behind content; the glass is the surface.
+a violet or grey slab behind content; the window is the surface.
 
 **The Dot, Not Fill Rule.** Status colours appear as a small dot (6 to 7pt), a
 glyph or a line of text, never as a filled surface. The one exception is the
@@ -246,7 +246,7 @@ paragraph elsewhere in the pane.
 
 ## Layout
 
-The launcher is a content-sized window of frosted Liquid Glass: its column ends
+The launcher is a content-sized window of system materials: its column ends
 in `.fixedSize(horizontal: false, vertical: true)`, and the window is 580pt
 wide, 532pt of content in 24pt side margins. The title bar holds the traffic
 lights on the leading edge and the Settings gear on the trailing edge. Under it,
@@ -277,11 +277,11 @@ the container.
 ## Elevation & Depth
 
 Glimmer is tactile but restrained, with depth reserved for surfaces that respond
-to touch or float over the window. Liquid Glass (`.glassEffect`) is the primary
-depth cue. The launcher window itself is frosted Liquid Glass, see-through
+to touch or float over the window. system materials (`\.background\(\.regularMaterial\)`) is the primary
+depth cue. The launcher window itself is system materials, see-through
 enough to show colour behind it and blurred enough that text behind turns to
 colour. On it: the app buttons and the state button on the primary surface,
-plain glass on the readiness chip, the gear and the overflow menu, and plain
+regular material on the readiness chip, the gear and the overflow menu, and plain
 glass on the PC tiles in Settings. The refraction and colour behind the glass
 come from the desktop showing through, not from a gradient to remove. Shadows
 are black, soft and always cast downward.
@@ -297,7 +297,7 @@ are black, soft and always cast downward.
 
 **The Press, Not Pose Rule.** Depth (glass, shadow or scale) marks something you
 can press or something floating above the window. Facts and labels sit flat on
-the glass.
+the surface.
 
 **The One Light Rule.** Every shadow is black, at 12 to 20% opacity, offset
 downward. No coloured glows, no inner shadows, no upward light.
@@ -374,7 +374,7 @@ Tactile and confident: the things on screen that ask to be pressed.
 
 - **Corner Style:** 16pt for PC tiles in Settings; 12pt for inset panels. The
   launcher has no card: the window is the surface.
-- **Background:** plain glass or quaternary fill.
+- **Background:** regular material or quaternary fill.
 - **Border:** none.
 - **Internal Padding:** 16pt.
 
@@ -433,13 +433,10 @@ Tactile and confident: the things on screen that ask to be pressed.
 ### Do:
 
 - **Do** build every custom look as a style on a real control (a `ButtonStyle`
-  on a `Button`, glass on a `Button`), keeping native focus, keyboard and
+  on a `Button`, a material on a `Button`), keeping native focus, keyboard and
   VoiceOver behaviour.
 - **Do** keep violet to what acts: the app buttons, the state button, a primary
   capsule, and the PC glyph as a tint.
-- **Do** group plain-glass siblings in one `GlassEffectContainer` with spacing
-  equal to the layout gap, and never wrap filled controls in one: it composites
-  the glass over their labels.
 - **Do** nest radii concentrically wherever one shape sits inside another.
 - **Do** animate state with `.snappy` (0.3 to 0.35s, extra bounce 0.1). Under
   Reduce Motion the extra bounce is 0, slides become fades, and every pulse and
@@ -458,7 +455,7 @@ Tactile and confident: the things on screen that ask to be pressed.
   to the launcher column; fill the width with structure or narrow the window.
 - **Don't** redraw, recolour or reinterpret the app icon, and don't introduce a
   second brand hue.
-- **Don't** style facts as controls: no chips, pills or glass behind the spec
+- **Don't** style facts as controls: no chips, pills or material behind the spec
   line, addresses or static key notation.
 - **Don't** use coloured shadows, glows or upward light, and don't use colour
   fills for status.

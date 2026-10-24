@@ -57,8 +57,17 @@ extension VideoDecoder {
         // when the value doesn't change). We still guard the first-call
         // log so we can spot stream-start vs. mid-stream HDR transitions
         // in the trace.
+
+#if compiler(>=6.4)
         let preferred: CALayer.DynamicRange = active ? .high : .standard
         layer.preferredDynamicRange = preferred
+        let prefRangeStr = preferred.rawValue
+#else
+        if #available(macOS 15.0, *) {
+            layer.wantsExtendedDynamicRangeContent = active
+        }
+        let prefRangeStr = active ? "wantsEDR" : "standard"
+#endif
 
         // Also set the layer's own compositing colorspace. moonlight-qt's
         // vt_avsamplelayer.mm doesn't do this - they rely solely on the
@@ -92,10 +101,10 @@ extension VideoDecoder {
             didConfigureLayerOnce = true
             let formatHex = String(self.streamVideoFormat, radix: 16)
             log.info(
-                "Layer preferredDynamicRange=\(preferred.rawValue) is10Bit=\(is10Bit) (videoFormat=0x\(formatHex))"
+                "Layer preferredDynamicRange=\(prefRangeStr) is10Bit=\(is10Bit) (videoFormat=0x\(formatHex))"
             )
         } else {
-            log.info("Layer preferredDynamicRange updated to \(preferred.rawValue) (HDR active=\(active))")
+            log.info("Layer preferredDynamicRange updated to \(prefRangeStr) (HDR active=\(active))")
         }
 
         // Surface effective HDR state. We treat "HDR mode + 10-bit" as
@@ -477,8 +486,17 @@ extension VideoDecoder {
     /// `probeAndLogPixelBufferAttachments` to keep each unit focused.
     @MainActor
     private func logFirstFrameProbe(_ facts: FirstFrameProbeFacts) {
-        let layer = self.displayLayer
+                let layer = self.displayLayer
+#if compiler(>=6.4)
         let prefRange: String = layer?.preferredDynamicRange.rawValue ?? "n/a"
+#else
+        let prefRange: String
+        if let l = layer {
+            prefRange = l.wantsExtendedDynamicRangeContent ? "wantsEDR" : "standard"
+        } else {
+            prefRange = "n/a"
+        }
+#endif
         // AVSampleBufferDisplayLayer doesn't surface `colorspace` in
         // the Swift import surface (see comment on the setter above), so
         // KVC stays. Guard with CFGetTypeID to avoid an `as!` trap when

@@ -116,9 +116,7 @@ struct GlimmerApp: App {
                 // connect surface's real width (its .horizontal padding): a floor
                 // below it leaves the window a range to be dragged through.
                 .frame(minWidth: 580)
-                // Frosted Liquid Glass is the launcher's surface: see-through enough to show
-                // colour behind it, blurred enough that text behind turns to colour.
-                .containerBackground(for: .window) { Color.clear.glassEffect(.regular, in: .rect) }
+                                .containerBackground(.regularMaterial, for: .window)
         }
         .windowStyle(.hiddenTitleBar)
         // Exactly its content, never draggable bigger: nothing in the launcher grows, so a
@@ -244,11 +242,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             GlimmerShortcuts.trackPCs(of: mgr)
             // A stream started from the menu bar needs the Dock icon; its end
             // may leave nothing to come back to. The first value is launch state.
-            Task { [weak self] in
-                for await _ in Observations({ mgr.isStreaming }).dropFirst() {
-                    self?.refreshActivationPolicy()
+                        func trackStreaming() {
+                withObservationTracking { _ = mgr.isStreaming } onChange: { [weak self] in
+                    Task { @MainActor in
+                        self?.refreshActivationPolicy()
+                        trackStreaming()
+                    }
                 }
             }
+            trackStreaming()
         }
 
         // Login-launched: start as `.accessory` so no Dock icon shows beside an

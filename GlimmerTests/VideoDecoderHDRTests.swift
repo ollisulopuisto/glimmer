@@ -160,13 +160,25 @@ struct VideoDecoderHDRTests {
         decoder.onHDRActiveChanged = { flips.append($0) }
 
         decoder.setHDR(enabled: true)
+        #if compiler(>=6.4)
         #expect(layer.preferredDynamicRange == .high)
+#else
+        if #available(macOS 15.0, *) {
+            #expect(layer.wantsExtendedDynamicRangeContent == true)
+        }
+#endif
         #expect(Self.colorSpaceName(of: layer) == CGColorSpace.itur_2100_PQ)
         #expect(decoder.isHDRActive)
         #expect(decoder.hdrMetadataStore.snapshot.mdcv?.count == 24)
 
         decoder.setHDR(enabled: false)
+        #if compiler(>=6.4)
         #expect(layer.preferredDynamicRange == .standard)
+#else
+        if #available(macOS 15.0, *) {
+            #expect(layer.wantsExtendedDynamicRangeContent == false)
+        }
+#endif
         #expect(layer.value(forKey: "colorspace") == nil)
         #expect(!decoder.isHDRActive)
         #expect(decoder.hdrMetadataStore.snapshot == .empty)
@@ -185,7 +197,13 @@ struct VideoDecoderHDRTests {
 
         decoder.setHDR(enabled: true)
         #expect(decoder.hdrEnabled)
+        #if compiler(>=6.4)
         #expect(layer.preferredDynamicRange == .standard)
+#else
+        if #available(macOS 15.0, *) {
+            #expect(layer.wantsExtendedDynamicRangeContent == false)
+        }
+#endif
         #expect(!decoder.isHDRActive)
         #expect(flips.isEmpty)
     }

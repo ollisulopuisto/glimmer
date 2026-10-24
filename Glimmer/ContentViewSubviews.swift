@@ -36,7 +36,6 @@ struct AppIconsRow: View {
     }
 
     var body: some View {
-        // No GlassEffectContainer: it composites its glass above the app buttons' labels.
         LazyVGrid(columns: Self.columns, spacing: 10) {
             ForEach(inlineApps) { app in
                 appTile(app)
@@ -175,8 +174,7 @@ struct AppIconsRow: View {
         }
         .menuStyle(.borderlessButton)
         .menuIndicator(.hidden)
-        // Glass, not violet: it opens a list rather than streaming.
-        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 14))
+        .background(.regularMaterial, in: .rect(cornerRadius: 14))
         .help(model.isStreaming
             ? "Finish the current stream first"
             : "Show \(overflowApps.count) more app\(overflowApps.count == 1 ? "" : "s")")
@@ -210,14 +208,10 @@ struct EmptyPairingState: View {
         // is no extra height to centre within - only height they would invent.
         VStack(spacing: 26) {
             ZStack {
-                // Floating glass medallion behind the hero symbol -
-                // accent-tinted so it picks up the system tint.
                 Circle()
                     .frame(width: 144, height: 144)
-                    .glassEffect(
-                        .regular.tint(Color.accentColor.opacity(0.18)),
-                        in: .circle
-                    )
+                    .background(.regularMaterial, in: .circle)
+                    .background(Color.accentColor.opacity(0.18), in: .circle)
                     .overlay {
                         Circle()
                             .stroke(

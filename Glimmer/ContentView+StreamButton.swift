@@ -18,7 +18,8 @@ extension InsettableShape {
     func accentSurface() -> some View {
         fill(accentSurfaceGradient)
             // Interactive: the native hover and press response a violet control otherwise lacks.
-            .glassEffect(.regular.tint(Color.accentColor.opacity(0.15)).interactive(), in: self)
+            .background(.regularMaterial, in: self)
+            .background(Color.accentColor.opacity(0.15), in: self)
             .overlay {
                 strokeBorder(LinearGradient(colors: [.white.opacity(0.30), .white.opacity(0.02)],
                                             startPoint: .top, endPoint: .bottom), lineWidth: 1)
@@ -214,8 +215,6 @@ struct StreamButton: View {
             }
             .frame(maxWidth: .infinity)
         }
-        // Custom style = the hero's accent gradient + glass + soft rim.
-        // `.glassProminent` was too saturated; `.glass` near-neutral.
         .buttonStyle(StreamButtonStyle())
         // ENTER-TO-PLAY: Return fires the hero verb from anywhere in the
         // window (.disabled keeps it a no-op; sheets/alerts own Return while

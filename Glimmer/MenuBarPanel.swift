@@ -269,7 +269,7 @@ struct MenuBarPanel: View {
                 Text("Waking \(host.displayName)…").lineLimit(1)
                 Spacer()
                 Button("Stop Waiting") { model.cancelWake(host) }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.bordered)
                     .controlSize(.small)
             }
         case .pairAgain:
@@ -363,7 +363,7 @@ struct MenuBarPanel: View {
             } label: {
                 Label("Settings", systemImage: "gearshape").labelStyle(.iconOnly)
             }
-            .buttonStyle(.glass)
+            .buttonStyle(.bordered)
             .buttonBorderShape(.circle)
             .help("Settings")
             Menu {
@@ -379,7 +379,7 @@ struct MenuBarPanel: View {
                 Label("More", systemImage: "ellipsis").labelStyle(.iconOnly)
             }
             .menuStyle(.button)
-            .buttonStyle(.glass)
+            .buttonStyle(.bordered)
             .buttonBorderShape(.circle)
             .menuIndicator(.hidden)
         }

@@ -64,11 +64,7 @@ struct PCsPane: View {
         .sheet(isPresented: $showPairSheet) {
             PairSheet(initialAddress: initialPairAddress)
                 .environment(model)
-                // Sheets on macOS 26 read better with the Tahoe glass
-                // backdrop - `.thinMaterial` matches the Settings window
-                // chrome so the PIN tiles' tinted glass layers cleanly on
-                // top instead of stacking against an opaque sheet plate.
-                .presentationBackground(.thinMaterial)
+                                .presentationBackground(.thinMaterial)
         }
     }
 }
@@ -141,9 +137,7 @@ struct PCTile: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        // Glass tile - each PC card reads as a floating panel against the
-        // settings background. The star alone marks the default PC.
-        .glassEffect(.regular, in: .rect(cornerRadius: 16))
+                .background(.regularMaterial, in: .rect(cornerRadius: 16))
         // Shared right-click menu, the same items as the visible button above
         // and the launcher hero's menu.
         .hostContextMenu(host)

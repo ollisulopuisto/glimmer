@@ -44,7 +44,13 @@ struct PCQuery: EnumerableEntityQuery {
 struct StreamIntent: AppIntent {
     static let title: LocalizedStringResource = "Stream from PC"
     static let description = IntentDescription("Opens Glimmer and streams an app from a paired PC.")
-    static let supportedModes: IntentModes = .foreground
+
+    @available(macOS, deprecated: 16.0)
+    static var openAppWhenRun: Bool = true
+#if compiler(>=6.4)
+    static var supportedModes: IntentModes { .foreground }
+#endif
+
 
     @Parameter(title: "PC")
     var pc: PCEntity
@@ -168,13 +174,23 @@ struct GlimmerShortcuts: AppShortcutsProvider {
     static func trackPCs(of model: AppModel,
                          bootstrap: @escaping @MainActor (AppModel) -> Task<Void, Never> = { $0.startBootstrap() },
                          update: @escaping @MainActor () -> Void = { updateAppShortcutParameters() }) -> Task<Void, Never> {
-        Task {
+        Task { @MainActor in
             await bootstrap(model).value
-            var known: Set<PCEntity>?
-            for await pcs in Observations({ Set(model.hosts.map(PCEntity.init)) }) where pcs != known {
-                known = pcs
-                update()
+            final class Tracker {
+                var known: Set<PCEntity>?
             }
+            let state = Tracker()
+            func track() {
+                guard !Task.isCancelled else { return }
+                let current = withObservationTracking { Set(model.hosts.map(PCEntity.init)) } onChange: {
+                    Task { @MainActor in track() }
+                }
+                if current != state.known {
+                    state.known = current
+                    update()
+                }
+            }
+            track()
         }
     }
 }

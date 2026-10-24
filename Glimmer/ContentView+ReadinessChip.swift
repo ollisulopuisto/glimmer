@@ -140,27 +140,22 @@ struct ReadinessChip: View {
 
     var body: some View {
         let chip = presentation
-        // GlassEffectContainer composites adjacent glass elements as ONE
-        // floating cluster (Apple's Liquid Glass guidance) instead of
-        // stacking independent blur passes into double-blur artefacts.
-        GlassEffectContainer(spacing: 8) {
-            HStack(spacing: 8) {
-                Group {
-                    // certMismatch is the Trust affordance: a REAL Button, so
-                    // Tab and VoiceOver can reach it (an .onTapGesture alone
-                    // is invisible to both). Re-pairing re-pins the new cert.
-                    if chip == .certMismatch {
-                        Button { model.requestPairing(for: model.selectedHost) } label: { pill(for: chip) }
-                            .buttonStyle(.plain)
-                    } else {
-                        pill(for: chip)
-                    }
+        HStack(spacing: 8) {
+            Group {
+                // certMismatch is the Trust affordance: a REAL Button, so
+                // Tab and VoiceOver can reach it (an .onTapGesture alone
+                // is invisible to both). Re-pairing re-pins the new cert.
+                if chip == .certMismatch {
+                    Button { model.requestPairing(for: model.selectedHost) } label: { pill(for: chip) }
+                        .buttonStyle(.plain)
+                } else {
+                    pill(for: chip)
                 }
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel(accessibilitySummary(for: chip))
-                .accessibilityAddTraits(chip == .certMismatch ? .isButton : [])
-                .accessibilityHint(chip == .certMismatch ? "Pairs again to trust this PC's new certificate." : "")
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(accessibilitySummary(for: chip))
+            .accessibilityAddTraits(chip == .certMismatch ? .isButton : [])
+            .accessibilityHint(chip == .certMismatch ? "Pairs again to trust this PC's new certificate." : "")
         }
         .animation(.snappy(duration: 0.3, extraBounce: reduceMotion ? 0 : 0.1), value: presentation)
         .animation(.snappy(duration: 0.3, extraBounce: reduceMotion ? 0 : 0.1), value: model.hostRoute.routeClass)
@@ -190,7 +185,7 @@ struct ReadinessChip: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 4)
-        .glassEffect(.regular, in: .capsule)
+        .background(.regularMaterial, in: .capsule)
     }
 
     /// Chip sentence + route flavour for VoiceOver ("Host ready, round trip

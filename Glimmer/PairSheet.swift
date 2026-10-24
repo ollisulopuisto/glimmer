@@ -157,7 +157,7 @@ struct PairSheet: View {
                 Spacer()
             }
             .padding(12)
-            .glassEffect(.regular, in: .rect(cornerRadius: 10))
+            .background(.regularMaterial, in: .rect(cornerRadius: 10))
         }
     }
 
@@ -309,7 +309,7 @@ private struct HostChooser: View {
                             }
                             .padding(12)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                            .background(.regularMaterial, in: .rect(cornerRadius: 12))
                         }
                         .buttonStyle(.plain)
                     }
@@ -438,10 +438,8 @@ private struct PINTiles: View {
                     Text(String(ch).trimmingCharacters(in: .whitespaces))
                         .font(.system(size: 44, weight: .semibold, design: .monospaced))
                         .frame(maxWidth: .infinity, minHeight: 78)
-                        .glassEffect(
-                            .regular.tint(Color.accentColor.opacity(0.12)),
-                            in: .rect(cornerRadius: 14)
-                        )
+                        .background(.regularMaterial, in: .rect(cornerRadius: 14))
+                        .background(Color.accentColor.opacity(0.12), in: .rect(cornerRadius: 14))
                         .allowsHitTesting(false)
                 }
             }

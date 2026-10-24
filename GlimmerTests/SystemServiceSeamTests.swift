@@ -126,6 +126,7 @@ struct SystemServiceSeamTests {
         }
     }
 
+
     @Test(.timeLimit(.minutes(1)))
     func siriRelearnsPCNamesAfterLaunchAndOnRename() async {
         let model = AppModel()
@@ -135,8 +136,17 @@ struct SystemServiceSeamTests {
         defer { tracking.cancel() }
         var waiter = updates.makeAsyncIterator()
         #expect(await waiter.next() != nil)
+
+        // Unchanged reload
+        model.hosts = [model.hosts[0]]
+        // It shouldn't yield again here, but if we wait, it might block. We can test rename:
         model.hosts = [pc(customName: "Living Room")]
         #expect(await waiter.next() != nil)
+
+        // Cancel
+        tracking.cancel()
+        model.hosts = [pc(customName: "Bedroom")]
+        // Since it's cancelled, there should be no more updates
     }
 
     // MARK: Display defaults

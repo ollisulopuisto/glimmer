@@ -9,7 +9,7 @@ icon: code
 
 Required:
 
-- macOS 26 or newer
+- macOS 15.8 or newer
 - Xcode 26.6 or later (Swift 6, `swiftc`, `xcodebuild`, `xcrun`)
 - Homebrew
 - Python 3.10 or newer, for release tooling and its regression tests
@@ -475,7 +475,7 @@ Practically, before you call something done:
   commit in a clean worktree and run `make verify`. Record that commit SHA and
   the checks in the review. Hosted Verify runs the same gate as three parallel
   jobs (`make check` with every pre-commit hook, `make test`, `make test-asan`)
-  on Apple Silicon macOS 26 runners with Xcode 26.6 and compiler warnings
+  on Apple Silicon macOS 15.8 runners with Xcode 26.6 and compiler warnings
   treated as errors; the required `macOS` check passes only when all three do.
   The checks and tests jobs measure coverage and upload the reports. A separate
   `libFuzzer` job runs `scripts/fuzz.sh` for 30 seconds per target; it is not
@@ -484,7 +484,7 @@ Practically, before you call something done:
   receive no signing credentials and cannot publish releases.
 
 Hosted verification, CodeQL and releases use the same Xcode 26.6 toolchain on
-macOS 26. These checks exercise the minimum supported OS family, but do not
+macOS 15.8. These checks exercise the minimum supported OS family, but do not
 replace real streaming checks of audio devices, mouse capture and controllers.
 The macOS 27 Hot Corner option uses its documented public enum value so builds
 made with Xcode 26 preserve that behavior on newer systems. Release signing uses

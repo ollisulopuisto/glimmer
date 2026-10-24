@@ -97,7 +97,7 @@ struct ConnectBanner: View {
                     Button { model.runStreamErrorAction() } label: {
                         Label(action.title, systemImage: action.systemImage)
                     }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.bordered)
                     .controlSize(.small)
                     .disabled(model.streamErrorHost == nil || model.isStreaming)
                     // The action is disabled with no host selected or mid-
@@ -115,12 +115,8 @@ struct ConnectBanner: View {
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
-                // Liquid Glass floating-panel chrome with the red stroke on
-                // top - the stroke is the load-bearing severity affordance.
-                .glassEffect(
-                    .regular.tint(Color.red.opacity(0.12)),
-                    in: .rect(cornerRadius: 12)
-                )
+                .background(.regularMaterial, in: .rect(cornerRadius: 12))
+                .background(Color.red.opacity(0.12), in: .rect(cornerRadius: 12))
                 .overlay {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .stroke(Color.red, lineWidth: 1)
