@@ -19,7 +19,7 @@
   <a href="https://github.com/Se7enbrc/glimmer/actions/workflows/verify.yml"><img src="https://github.com/Se7enbrc/glimmer/actions/workflows/verify.yml/badge.svg?branch=main" alt="Verification status"></a>
   <a href="https://github.com/Se7enbrc/glimmer/actions/workflows/codeql.yml"><img src="https://github.com/Se7enbrc/glimmer/actions/workflows/codeql.yml/badge.svg?branch=main" alt="CodeQL status"></a>
   <a href="https://github.com/Se7enbrc/glimmer/releases/latest"><img src="https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Fse7enbrc.github.io%2Fglimmer%2Fappcast.xml&amp;query=%2F%2F%2A%5Blocal-name%28%29%3D%27item%27%5D%5Bnot%28%2A%5Blocal-name%28%29%3D%27channel%27%5D%29%5D%5B1%5D%2F%2A%5Blocal-name%28%29%3D%27shortVersionString%27%5D&amp;label=release&amp;prefix=v" alt="Latest release offered to Glimmer"></a>
-  <a href="#install"><img src="https://img.shields.io/badge/macOS-26%2B%20%C2%B7%20Apple%20silicon-000000?logo=apple&amp;logoColor=white" alt="macOS 26 or later on Apple silicon"></a>
+  <a href="#install"><img src="https://img.shields.io/badge/macOS-15.8%2B%20%C2%B7%20Apple%20silicon-000000?logo=apple&amp;logoColor=white" alt="macOS 15.8 or later on Apple silicon"></a>
   <a href="https://github.com/Se7enbrc/homebrew-glimmer"><img src="https://img.shields.io/badge/Homebrew-se7enbrc%2Fglimmer-fbb040?logo=homebrew&amp;logoColor=white" alt="Homebrew cask in the se7enbrc/glimmer tap"></a>
   <a href="docs/RELEASE.md"><img src="https://img.shields.io/badge/releases-signed%20%C2%B7%20notarized%20%C2%B7%20attested-2da44e" alt="Releases are signed, notarized and attested"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/Se7enbrc/glimmer"><img src="https://api.securityscorecards.dev/projects/github.com/Se7enbrc/glimmer/badge" alt="OpenSSF Scorecard"></a>
@@ -35,7 +35,7 @@
 Glimmer is a Mac-native client for
 [Sunshine](https://github.com/LizardByte/Sunshine). It streams games from your
 PC using Apple's video, audio and input frameworks, with a SwiftUI and AppKit
-interface. macOS 26 or later, Apple Silicon. Free, open source, and always free.
+interface. macOS 15.8 or later, Apple Silicon. Free, open source, and always free.
 
 ## What you get
 
@@ -88,7 +88,7 @@ right here in `docs/`.
 
 ## Build
 
-Xcode 26.6 or later. Its one third-party library is
+Xcode 26 or later. Its one third-party library is
 [Sparkle](https://sparkle-project.org), for updates.
 
 ```bash

@@ -29,12 +29,12 @@ Run via `swift scripts/generate-icons.swift [flag]`:
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | _(none)_    | Light variant: legacy `.appiconset` output                                                                                                                                                                                |
 | `--dark`    | Dark variant: brighter palette so the icon pops on a dark Dock                                                                                                                                                            |
-| `--layered` | The layered 1024px PNGs into `AppIcon.icon/Assets` (`Background-Light.png` + `Background-Dark.png` + `Foreground.png`) consumed by macOS 26's Icon Composer bundle for light/dark/tinted/clear theme-snapping in the Dock |
+| `--layered` | The layered 1024px PNGs into `AppIcon.icon/Assets` (`Background-Light.png` + `Background-Dark.png` + `Foreground.png`) consumed by macOS 15.8's Icon Composer bundle for light/dark/tinted/clear theme-snapping in the Dock |
 
 In legacy mode the dark variant emits filenames with a `-dark` suffix, and the
 `.appiconset`'s `Contents.json` carries both sets with
 `appearances: [{luminosity: dark}]` entries pointing at the dark files. That
-output directory no longer exists in the tree; on macOS 26 the Tahoe `.icon`
+output directory no longer exists in the tree; on macOS 15.8 the Tahoe `.icon`
 bundle is what the Dock reads.
 
 ## `.icon` bundle layout (`--layered`)
@@ -54,7 +54,7 @@ watchOS, none on clear):
   either appearance; the system's Liquid Glass shader handles the tinted/clear
   adaptations.
 
-The `.icon` bundle lives next to `Assets.xcassets`, NOT inside it: Xcode 26
+The `.icon` bundle lives next to `Assets.xcassets`, NOT inside it: Xcode 26.3
 requires the Icon Composer bundle to be a top-level resource in the target so it
 produces appearance-themed AppIcon entries in `Assets.car`. Placed inside
 `.xcassets` the bundle is silently ignored. `generate-icons.swift --layered`

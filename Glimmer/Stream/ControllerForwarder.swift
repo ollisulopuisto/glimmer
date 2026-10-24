@@ -193,7 +193,7 @@ extension InputForwarder {
         }
 
         // Create/Share (`buttonOptions`) is bound to a macOS system gesture -
-        // measured on macOS 26 for the DualSense (isBoundToSystemGesture == true;
+        // measured on macOS 15.8 for the DualSense (isBoundToSystemGesture == true;
         // the WWDC21 contract is double-press = screenshot, long-press = start or
         // stop a ReplayKit recording). "Bound" means GameController runs the
         // recognizer FIRST and withholds the press from the app, and the Moonlight

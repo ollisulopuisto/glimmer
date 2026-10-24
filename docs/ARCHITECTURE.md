@@ -335,7 +335,7 @@ Apple also documents
 
 When active, `VideoDecoder+HDR.configureLayerColorspace` sets:
 
-- `layer.preferredDynamicRange = .high` (macOS 26+ API; replaces the older
+- `layer.preferredDynamicRange = .high` (macOS 15.8+ API; replaces the older
   `wantsExtendedDynamicRangeContent` Bool).
 - `layer.setValue(CGColorSpace(name: .itur_2100_PQ), forKey: "colorspace")`, via
   KVC because the Swift overlay elides the property on the
@@ -395,7 +395,7 @@ bitmask from `/serverinfo`, passed verbatim; see the landmine note in
 `InputForwarder` (`Glimmer/Stream/InputForwarder.swift`, plus the
 `ControllerForwarder` extension) hooks events at the responder level via a
 custom `StreamInputView` installed as the stream window's first responder.
-Earlier revisions used `NSEvent.addLocalMonitorForEvents`, but macOS 26's
+Earlier revisions used `NSEvent.addLocalMonitorForEvents`, but macOS 15.8's
 responder chain consumes events for content views that accept first responder
 before the local-monitor block fires.
 

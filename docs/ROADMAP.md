@@ -66,8 +66,8 @@ These are settled decisions. A pull request is not the place to reopen them.
 - Analytics, tracking or third-party network calls.
 - A second command-line implementation or wrapper script. The `glimmer` command
   lives in the app binary.
-- Intel Macs and macOS versions before 26. On the Mac, Glimmer is Apple Silicon
-  only, macOS 26 and later.
+- Intel Macs and macOS versions before 15.8. On the Mac, Glimmer is Apple Silicon
+  only, macOS 15.8 and later.
 - Paid features. Glimmer is free, and every feature belongs to every user.
 
 ## How this changes

@@ -39,14 +39,14 @@ enum SettingsPane: String, CaseIterable, Identifiable {
         case .general: return "gearshape.fill"
         // A quality dial, not a play button - the pane tunes how the
         // stream looks, it doesn't start one. `dial.high.fill` has shipped
-        // since SF Symbols 3, so no missing-glyph risk on macOS 26.
+        // since SF Symbols 3, so no missing-glyph risk on macOS 15.8.
         case .streaming: return "dial.high.fill"
         case .pcs: return "display"
         case .shortcuts: return "keyboard.fill"
         case .diagnostics: return "stethoscope"
         // System Settings' About uses `info.circle.fill` - the bare "info"
         // symbol doesn't ship in SF Symbols 6 and falls back to a missing
-        // glyph on macOS 26.
+        // glyph on macOS 15.8.
         case .about: return "info.circle.fill"
         }
     }
@@ -75,7 +75,7 @@ struct SettingsRoot: View {
 
     var body: some View {
         // NavigationSplitView's master column auto-adopts Liquid Glass
-        // sidebar material on macOS 26 (same chrome System Settings uses).
+        // sidebar material on macOS 15.8 (same chrome System Settings uses).
         // We pair it with `.scrollContentBackground(.hidden)` on the List
         // so the sidebar's own opaque list background doesn't paint over
         // the translucent window material the Settings scene provides.

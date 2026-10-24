@@ -7,7 +7,7 @@ Where the two differ, the stricter rule wins.
 ## What Glimmer is
 
 A Mac-native client for [Sunshine](https://github.com/LizardByte/Sunshine):
-Swift 6, Apple Silicon, macOS 26 and later. Socket, decoder, display, audio and
+Swift 6, Apple Silicon, macOS 15.8 and later. Socket, decoder, display, audio and
 input all run in one Swift process, with no external player and no C engine.
 
 The bar is one sentence: someone using Glimmer should mistake it for something
@@ -53,8 +53,8 @@ tests and makes the app worse is a regression with a green check mark.
 
 ## Setup and commands
 
-Xcode 26.6 or later. Hosted verification, CodeQL and releases all use Xcode 26.6
-on macOS 26. Keep their toolchains aligned; the deployment target is 26.0.
+Xcode 26 or later. Hosted verification, CodeQL and releases all use Xcode 26
+on macOS 15.8. Keep their toolchains aligned; the deployment target is 15.8.
 
 ```bash
 brew install python swiftlint actionlint trufflehog pre-commit
@@ -195,8 +195,8 @@ These are settled. A pull request is not the place to reopen them.
   a style on the real control (a `ButtonStyle` on a `Button`, never a tap
   gesture on a shape), built from system materials, and it keeps native focus,
   keyboard and VoiceOver behaviour. No web views, no cross-platform layers.
-- The deployment target is macOS 26. Anything newer sits behind `#available`,
-  and the macOS 26 path must still look finished.
+- The deployment target is macOS 15.8. Anything newer sits behind `#available`,
+  and the macOS 15.8 path must still look finished.
 - No analytics, tracking or third-party network calls. Glimmer talks to the PC,
   to its local network for discovery and Wake on LAN, and to its update feed.
 

@@ -16,7 +16,7 @@ layout:
 
 Glimmer is a Mac-native client for
 [Sunshine](https://github.com/LizardByte/Sunshine). It streams games from your
-own PC to your Mac. macOS 26 or later, Apple silicon. Free, now and always.
+own PC to your Mac. macOS 15.8 or later, Apple silicon. Free, now and always.
 
 ![Glimmer's launcher with a paired PC, Desktop, and Steam Big Picture ready to stream.](assets/launcher.png)
 

@@ -31,7 +31,7 @@ extension VideoDecoder {
     /// once at stream start from handleStart(), and again from setHDR() if
     /// the host flips HDR mid-stream.
     ///
-    /// `preferredDynamicRange` (macOS 26+ replacement for the older
+    /// `preferredDynamicRange` (macOS 15.8+ replacement for the older
     /// `wantsExtendedDynamicRangeContent` boolean):
     ///   * `.high`     - engage full EDR. Used when the stream is 10-bit
     ///                   AND the host has signalled HDR mode. Per Apple's
@@ -63,7 +63,7 @@ extension VideoDecoder {
         // Also set the layer's own compositing colorspace. moonlight-qt's
         // vt_avsamplelayer.mm doesn't do this - they rely solely on the
         // per-buffer kCVImageBufferCGColorSpaceKey attachment - but on
-        // macOS 26 the EDR-engagement heuristic also reads
+        // macOS 15.8 the EDR-engagement heuristic also reads
         // layer.colorspace. Without it, even with preferredDynamicRange =
         // .high and PQ-tagged content arriving, macOS keeps
         // NSScreen.maximumEDR at 1.0 (display stays in SDR) and tonemaps
@@ -80,7 +80,7 @@ extension VideoDecoder {
         // moonlight-qt reaches it from Objective-C++. We don't have an
         // Objective-C++ bridge for a single call site, so KVC stays until
         // the Swift import widens. Re-confirmed against the released
-        // macOS 26 SDK.
+        // macOS 15.8 SDK.
         if active {
             if let cs = CGColorSpace(name: CGColorSpace.itur_2100_PQ) {
                 layer.setValue(cs, forKey: "colorspace")
@@ -343,7 +343,7 @@ extension VideoDecoder {
     ///   * If derivedKey = itur_2100_PQ but EDR headroom = 1.0 → display
     ///     isn't in HDR mode. System Settings → Displays → HDR Video.
     ///   * If derivedKey = itur_2100_PQ but the layer's preferredDynamic-
-    ///     Range = .standard on macOS 26+ → that property is unset and the
+    ///     Range = .standard on macOS 15.8+ → that property is unset and the
     ///     compositor is SDR-mapping the PQ buffer.
     ///   * If bitstreamTransfer = unknown but we're streaming Main10 with
     ///     LiSetHdrMode(true) → Sunshine is shipping untagged PQ video and
