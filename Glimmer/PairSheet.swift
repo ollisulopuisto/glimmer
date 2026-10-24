@@ -432,16 +432,14 @@ private struct PINTiles: View {
     let pin: String
     var body: some View {
         let digits = pin.padding(toLength: 4, withPad: " ", startingAt: 0)
-        GlassEffectContainer(spacing: 10) {
-            HStack(spacing: 10) {
-                ForEach(Array(digits.enumerated()), id: \.offset) { _, ch in
-                    Text(String(ch).trimmingCharacters(in: .whitespaces))
-                        .font(.system(size: 44, weight: .semibold, design: .monospaced))
-                        .frame(maxWidth: .infinity, minHeight: 78)
-                        .background(.regularMaterial, in: .rect(cornerRadius: 14))
-                        .background(Color.accentColor.opacity(0.12), in: .rect(cornerRadius: 14))
-                        .allowsHitTesting(false)
-                }
+        HStack(spacing: 10) {
+            ForEach(Array(digits.enumerated()), id: \.offset) { _, ch in
+                Text(String(ch).trimmingCharacters(in: .whitespaces))
+                    .font(.system(size: 44, weight: .semibold, design: .monospaced))
+                    .frame(maxWidth: .infinity, minHeight: 78)
+                    .background(.regularMaterial, in: .rect(cornerRadius: 14))
+                    .background(Color.accentColor.opacity(0.12), in: .rect(cornerRadius: 14))
+                    .allowsHitTesting(false)
             }
         }
         .frame(maxWidth: .infinity)

@@ -120,8 +120,7 @@ struct MainWindow: View {
         .toolbar {
             // The PC switcher is the header's name; the toolbar keeps only Settings,
             // on the trailing edge (a hidden title bar has no title to push it there).
-            ToolbarSpacer(.flexible)
-            ToolbarItem(placement: .automatic) {
+            ToolbarItem(placement: .primaryAction) {
                 Button {
                     openSettings()
                 } label: {

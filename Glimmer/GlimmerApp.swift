@@ -242,15 +242,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             GlimmerShortcuts.trackPCs(of: mgr)
             // A stream started from the menu bar needs the Dock icon; its end
             // may leave nothing to come back to. The first value is launch state.
-                        func trackStreaming() {
-                withObservationTracking { _ = mgr.isStreaming } onChange: { [weak self] in
-                    Task { @MainActor in
-                        self?.refreshActivationPolicy()
-                        trackStreaming()
-                    }
-                }
-            }
-            trackStreaming()
+            trackStreaming(mgr: mgr)
         }
 
         // Login-launched: start as `.accessory` so no Dock icon shows beside an
@@ -277,6 +269,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             forName: NSWindow.willCloseNotification,
             object: nil, queue: .main
         ) { _ in recheck() })
+    }
+
+    @MainActor
+    private func trackStreaming(mgr: AppModel) {
+        withObservationTracking { _ = mgr.isStreaming } onChange: { [weak self, weak mgr] in
+            Task { @MainActor [weak self, weak mgr] in
+                guard let self, let mgr else { return }
+                self.refreshActivationPolicy()
+                self.trackStreaming(mgr: mgr)
+            }
+        }
     }
 
     #if canImport(Sparkle)
