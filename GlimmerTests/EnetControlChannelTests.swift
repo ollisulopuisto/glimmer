@@ -112,7 +112,7 @@ struct EnetControlChannelTests {
         let verifyConnect = [Enet.cmdVerifyConnect | Enet.flagAcknowledge, Enet.peerChannelID, 0, 1]
             + [UInt8](repeating: 0, count: 40)
         let datagram = Self.reliable(relSeq: 1, try Self.termination(seq: 0))
-        channel.onDatagram(Array(datagram[..<4]) + verifyConnect + datagram[4...])
+        channel.onDatagram(Array(datagram[..<4]) + verifyConnect + Array(datagram[4...]))
         #expect(codes.values == [Self.hostCode])
     }
 
@@ -363,14 +363,14 @@ struct EnetControlChannelTests {
     func skippedCommandPreservesFollowingTermination(command: UInt8) throws {
         let (channel, codes) = try Self.makeChannel()
         let datagram = Self.reliable(relSeq: 1, try Self.termination(seq: 1))
-        channel.onDatagram(Array(datagram[..<4]) + Self.prefix(command) + datagram[4...])
+        channel.onDatagram(Array(datagram[..<4]) + Self.prefix(command) + Array(datagram[4...]))
         #expect(codes.values == [Self.hostCode])
     }
 
     @Test func everyTruncationRecoversOnNextDatagram() throws {
         let valid = Self.reliable(relSeq: 1, try Self.termination(seq: 2))
         let first = Self.reliable(relSeq: 1, try Self.termination(seq: 1))
-        let prefixed = Array(first[..<4]) + Self.prefix(Enet.cmdSendUnreliable) + first[4...]
+        let prefixed = Array(first[..<4]) + Self.prefix(Enet.cmdSendUnreliable) + Array(first[4...])
         for cut in 0..<prefixed.count {
             let (channel, codes) = try Self.makeChannel()
             channel.onDatagram(Array(prefixed.prefix(cut)))

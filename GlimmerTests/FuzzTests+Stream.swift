@@ -181,7 +181,7 @@ struct StreamFuzzTests {
             for shard in 0..<2 {
                 packets.append(Self.audioRtpHeader(type: 127, seq: base &+ 4 &+ UInt16(shard), timestamp: timestamp)
                     + [UInt8(shard), 97, UInt8(base >> 8), UInt8(truncatingIfNeeded: base)]
-                    + Self.audioRtpHeader(type: 0, seq: 0, timestamp: timestamp)[4...]
+                    + Array(Self.audioRtpHeader(type: 0, seq: 0, timestamp: timestamp)[4...])
                     + (0..<80).map { _ in rng.byte() })
             }
             for packet in shuffled(packets, &rng) where rng.int(6) != 0 {
