@@ -167,7 +167,8 @@ struct VideoDepacketizerRecoveryTests {
         let aud: [UInt8] = [0, 0, 0, 1] + (hevc ? [0x46, 1, 0x50] : [0x09, 0x10])
         let sei: [UInt8] = [0, 0, 1] + (hevc ? [0x4E, 1, 0x80] : [0x06, 0x80])
         let slice: [UInt8] = [0, 0, 1] + (hevc ? [0x02, 1, 0x40] : [0x41, 0x40])
-        let bodies = [aud, aud + sei, aud + sei + [0, 0, 0, 1], aud + sei + slice]
+        let metadata: [UInt8] = aud + sei
+        let bodies: [[UInt8]] = [aud, metadata, metadata + [0, 0, 0, 1], metadata + slice]
         for (index, body) in bodies.enumerated() {
             let frame = UInt32(index + 1)
             dp.process(packet(frame: frame, spi: UInt32(index), type: 2, body: body))
