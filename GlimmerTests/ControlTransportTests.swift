@@ -50,7 +50,12 @@ import Testing
     @Test func identityRefusesAKeyFromAnotherCert() async throws {
         let (certA, _) = try await IdentityManager.shared.generateKeyPairAndCert()
         let (_, keyB) = try await IdentityManager.shared.generateKeyPairAndCert()
-        #expect(throws: StreamError.self) { try ControlTransport.clientIdentity(certPEM: certA, keyPEM: keyB) }
+        do {
+            _ = try ControlTransport.clientIdentity(certPEM: certA, keyPEM: keyB)
+            Issue.record("An identity with an unrelated private key was accepted")
+        } catch StreamError.crypto(let detail) {
+            #expect(detail == "client cert/key mismatch")
+        }
     }
 
     @Test func pinnedPCAnswersThisMac() async throws {

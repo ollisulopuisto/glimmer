@@ -84,6 +84,10 @@ Per-machine RSA-2048 client identity, generated on first launch, 20-year
 self-signed cert with CN `NVIDIA GameStream Client` (the standard GameStream
 client identifier).
 
+Before accepting an identity, Glimmer compares the certificate's RSA public key
+with the private key's public component. Identity construction alone does not
+reject mismatched pairs on every supported macOS version.
+
 **Storage: mode-0600 files**, not the keychain. Three files:
 
 - `client-cert.pem`: X.509 cert in PEM

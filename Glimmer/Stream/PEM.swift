@@ -59,9 +59,14 @@ enum PEM {
         guard let certificate = certificate(certPEM), let key = privateKey(keyPEM) else {
             throw StreamError.crypto("could not parse client certificate or private key")
         }
-        _ = try certificateKey(certificate, context: "client certificate")
+        let certificateKey = try certificateKey(certificate, context: "client certificate")
         try requireStrongRSA(key, context: "client private key")
-        guard let identity = SecIdentityCreate(nil, certificate, key) else {
+        // Sequoia can construct mismatched identities, so compare the public keys first.
+        guard let publicKey = SecKeyCopyPublicKey(key),
+              let certificateBytes = SecKeyCopyExternalRepresentation(certificateKey, nil) as Data?,
+              let keyBytes = SecKeyCopyExternalRepresentation(publicKey, nil) as Data?,
+              certificateBytes == keyBytes,
+              let identity = SecIdentityCreate(nil, certificate, key) else {
             throw StreamError.crypto("client cert/key mismatch")
         }
         return identity
